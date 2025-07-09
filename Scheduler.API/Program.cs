@@ -1,16 +1,14 @@
+using Scheduler.API;
+using Scheduler.API.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddScoped<IDbConnection>(sp =>
-//{
-//    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//    return new NpgsqlConnection(connectionString);
-//});
+DapperMappingInitializer.Initialize();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddProjectServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -22,9 +20,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

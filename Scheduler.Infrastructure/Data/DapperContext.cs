@@ -1,6 +1,6 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System.Data;
-using Microsoft.Extensions.Configuration;
 
 namespace Scheduler.Infrastructure.Data
 {
