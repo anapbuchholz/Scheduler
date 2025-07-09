@@ -1,11 +1,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IDbConnection>(sp =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    return new NpgsqlConnection(connectionString);
-});
+//builder.Services.AddScoped<IDbConnection>(sp =>
+//{
+//    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//    return new NpgsqlConnection(connectionString);
+//});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
