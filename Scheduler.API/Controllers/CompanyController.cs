@@ -5,16 +5,10 @@ namespace Scheduler.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CompanyController : ControllerBase
+    public class CompanyController(ILogger<CompanyController> logger, ICompanyService companyService) : ControllerBase
     {
-        private readonly ILogger<CompanyController> _logger;
-        private readonly ICompanyService _companyService;
-
-        public CompanyController(ILogger<CompanyController> logger, ICompanyService companyService)
-        {
-            _logger = logger;
-            _companyService = companyService;
-        }
+        private readonly ILogger<CompanyController> _logger = logger;
+        private readonly ICompanyService _companyService = companyService;
 
         [HttpGet]
         public IActionResult GetAll()
