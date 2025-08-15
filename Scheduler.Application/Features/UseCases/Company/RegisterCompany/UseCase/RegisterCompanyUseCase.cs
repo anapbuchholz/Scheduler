@@ -1,20 +1,41 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.Shared.IO.Validation;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 
 namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase
 {
     internal sealed class RegisterCompanyUseCase(
         ICompanyRepository companyRepository,
-        IRequestValidator<RegisterCompanyInput> validator) 
-        : IUseCase<RegisterCompanyInput, Output>
+        IRequestValidator<RegisterCompanyRequest> validator) 
+        : IUseCase<RegisterCompanyRequest, Response>
     {
         private readonly ICompanyRepository _companyRepository = companyRepository;
-        private readonly IRequestValidator<RegisterCompanyInput> _validator = validator;
+        private readonly IRequestValidator<RegisterCompanyRequest> _validator = validator;
 
-        public Task<Output> Execute(RegisterCompanyInput input)
+        public async Task<Response> Execute(RegisterCompanyRequest input)
         {
-            throw new NotImplementedException();
+            var validationResult = await _validator.Validate(input);
+            if (!validationResult.IsValid)
+            {
+                return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+            }
+
+            var entity = new CompanyEntity
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                DocumentNumber = input.DocumentNumber!,
+                TradeName = input.TradeName!,
+                LegalName = input.LegalName!,
+                Email = input.Email!,
+                Phone = input.PhoneNumber!
+            };
+            await _companyRepository.RegisterCompanyAsync(entity);
+
+            return Response.CreateCreatedResponse();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Dapper.FluentMap;
-using Scheduler.Infrastructure.Mapping;
 
 namespace Scheduler.API
 {

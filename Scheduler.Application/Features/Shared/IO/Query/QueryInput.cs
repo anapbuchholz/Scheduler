@@ -1,6 +1,6 @@
 ﻿namespace Scheduler.Application.Features.Shared.IO.Query
 {
-    public abstract class QueryInput : IInput
+    public abstract class QueryInput : IRequest
     {
         public QueryInput(QueryRequest request)
         {

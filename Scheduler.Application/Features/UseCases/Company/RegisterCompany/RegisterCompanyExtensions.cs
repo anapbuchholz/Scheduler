@@ -11,8 +11,8 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany
     {
         public static IServiceCollection AddRegisterCompany(this IServiceCollection services)
         {
-            services.AddScoped<IRequestValidator<RegisterCompanyInput>, RegisterCompanyValidator>();
-            services.AddScoped<IUseCase<RegisterCompanyInput, Output>, RegisterCompanyUseCase>();
+            services.AddScoped<IRequestValidator<RegisterCompanyRequest>, RegisterCompanyValidator>();
+            services.AddScoped<IUseCase<RegisterCompanyRequest, Response>, RegisterCompanyUseCase>();
             return services;
         }
     }

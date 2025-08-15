@@ -2,8 +2,8 @@
 
 namespace Scheduler.Application.Features.Shared
 {
-    public interface IUseCase<TInput, TOutput> where TInput : IInput where TOutput : Output
+    public interface IUseCase<TInput, TOutput> where TInput : IRequest where TOutput : Response
     {
-        Task<Output> Execute(TInput input);
+        Task<Response> Execute(TInput input);
     }
 }
