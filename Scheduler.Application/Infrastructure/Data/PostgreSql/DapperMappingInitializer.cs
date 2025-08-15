@@ -1,6 +1,7 @@
 ﻿using Dapper.FluentMap;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 
-namespace Scheduler.API
+namespace Scheduler.Application.Infrastructure.Data.PostgreSql
 {
     public class DapperMappingInitializer
     {
@@ -17,7 +18,7 @@ namespace Scheduler.API
 
                 FluentMapper.Initialize(config =>
                 {
-                    config.AddMap(new Map());
+                    config.AddMap(new CompanyEntityMap());
                 });
 
                 _isInitialized = true;

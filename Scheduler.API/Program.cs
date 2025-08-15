@@ -1,4 +1,4 @@
-using Scheduler.API;
+using Scheduler.Application.Infrastructure.Data.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
