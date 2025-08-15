@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Scheduler.API.Services;
 
 namespace Scheduler.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CompanyController(ILogger<CompanyController> logger, ICompanyService companyService) : ControllerBase
+    public class CompanyController() : ControllerBase
     {
-        private readonly ILogger<CompanyController> _logger = logger;
-        private readonly ICompanyService _companyService = companyService;
-
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -19,7 +15,7 @@ namespace Scheduler.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var company = await _companyService.GetCompanyAsync(id);
+            var company = await _GetCompanyUseCase.ExecuteAsync(id);
             if (company == null)
             {
                 return NotFound(Response<object>.Fail("Company not found"));

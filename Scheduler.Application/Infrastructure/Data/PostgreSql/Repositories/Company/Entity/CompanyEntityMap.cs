@@ -1,11 +1,10 @@
 ﻿using Dapper.FluentMap.Mapping;
-using Scheduler.Infrastructure.Models;
 
-namespace Scheduler.Infrastructure.Mapping
+namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity
 {
-    public class Map : EntityMap<Company>
+    internal class CompanyEntityMap : EntityMap<CompanyEntity>
     {
-        public Map() 
+        public CompanyEntityMap()
         {
             Map(x => x.Id).ToColumn("id");
             Map(x => x.TradeName).ToColumn("trade_name");
