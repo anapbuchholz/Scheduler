@@ -5,7 +5,7 @@ namespace Scheduler.Application.Features.UseCases.Company
 {
     internal static class CompanyExtensions
     {
-        public static IServiceCollection AddCompany(this IServiceCollection services)
+        public static IServiceCollection AddCompanyFeatures(this IServiceCollection services)
         {
             services.AddRegisterCompany();
             return services;

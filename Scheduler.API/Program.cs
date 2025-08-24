@@ -1,12 +1,11 @@
-using Scheduler.Application.Infrastructure.Data.PostgreSql;
+using Scheduler.Application;
 
 var builder = WebApplication.CreateBuilder(args);
-
-DapperMappingInitializer.Initialize();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

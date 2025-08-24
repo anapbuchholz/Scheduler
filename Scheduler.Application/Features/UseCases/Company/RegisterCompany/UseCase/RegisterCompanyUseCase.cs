@@ -22,6 +22,12 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
                 return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
             }
 
+            var existingCompany = await _companyRepository.GetCompanyByDocumentNumberAsync(input.DocumentNumber!);
+            if (existingCompany != null)
+            {
+                return Response.CreateConflictResponse("Já existe uma empresa cadastrada com esse número de documento.");
+            }
+
             var entity = new CompanyEntity
             {
                 Id = Guid.NewGuid(),

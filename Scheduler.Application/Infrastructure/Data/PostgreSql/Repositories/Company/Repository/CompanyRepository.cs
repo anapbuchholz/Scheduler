@@ -16,6 +16,14 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
             return await connection.QueryFirstOrDefaultAsync<CompanyEntity>(query, new { Id = id });
         }
 
+        public async Task<CompanyEntity?> GetCompanyByDocumentNumberAsync(string documentNumber)
+        {
+            var query = CompanySqlConstants.SELECT_COMPANY_BY_DOCUMENT_NUMBER;
+
+            var connection = _context.GetConnection();
+            return await connection.QueryFirstOrDefaultAsync<CompanyEntity>(query, new { DocumentNumber = documentNumber });
+        }
+
 
         public async Task RegisterCompanyAsync(CompanyEntity company)
         {

@@ -4,15 +4,20 @@ namespace Scheduler.Application.Features.Shared.ValueObjects
 {
     internal sealed class DocumentNumberValueObject : BaseValueObject
     {
+        private const int _maxLength = 14;
+        private const int _minLength = 11;
+
         private DocumentNumberValueObject(in string value, in int maxLength, in int minLength) : base(value, maxLength, minLength)
         {
         }
 
         public bool IsDigitOnly { get { return Value != null && Value.IsDigitsOnly(); } }
 
-        public static DocumentNumberValueObject Create(string documentNumber, int maxLength = 14, int minLength = 11)
+        public bool IsValid { get { return Value != null && (Value.IsValidCpf() || Value.IsValidCnpj()); } }
+
+        public static DocumentNumberValueObject Create(string documentNumber)
         {
-            return new DocumentNumberValueObject(documentNumber, maxLength, minLength);
+            return new DocumentNumberValueObject(documentNumber, _maxLength, _minLength);
         }
     }
 }

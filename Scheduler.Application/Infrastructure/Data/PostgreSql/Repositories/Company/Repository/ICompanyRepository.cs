@@ -5,6 +5,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
     internal interface ICompanyRepository
     {
         Task<CompanyEntity?> GetCompanyAsync(Guid id);
+        Task<CompanyEntity?> GetCompanyByDocumentNumberAsync(string documentNumber);
         Task RegisterCompanyAsync(CompanyEntity company);
     }
 }

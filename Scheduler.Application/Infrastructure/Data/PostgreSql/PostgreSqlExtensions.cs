@@ -8,6 +8,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql
     {
         public static IServiceCollection AddPostgreSql(this IServiceCollection services)
         {
+            DapperMappingInitializer.Initialize();
             services.AddScoped<IDataContext, PostgreSqlDataContext>();
             AddRepositories(services);
             return services;
