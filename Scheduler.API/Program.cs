@@ -1,14 +1,14 @@
-using Scheduler.API;
-using Scheduler.API.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Scheduler.Application;
 
 var builder = WebApplication.CreateBuilder(args);
-
-DapperMappingInitializer.Initialize();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddProjectServices(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
