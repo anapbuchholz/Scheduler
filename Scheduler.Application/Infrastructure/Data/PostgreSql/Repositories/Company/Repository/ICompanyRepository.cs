@@ -1,4 +1,6 @@
 ﻿using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using System;
+using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository
 {

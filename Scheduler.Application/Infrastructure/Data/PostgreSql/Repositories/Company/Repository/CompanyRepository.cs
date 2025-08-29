@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
+using System;
+using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository
 {

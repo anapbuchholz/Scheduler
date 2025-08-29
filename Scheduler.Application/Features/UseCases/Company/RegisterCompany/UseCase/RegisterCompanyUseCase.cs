@@ -3,6 +3,8 @@ using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
+using System;
+using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase
 {

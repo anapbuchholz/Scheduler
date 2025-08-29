@@ -3,6 +3,8 @@ using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
+using System;
+using System.Threading.Tasks;
 
 namespace Scheduler.API.Controllers
 {
@@ -14,13 +16,13 @@ namespace Scheduler.API.Controllers
         private readonly IUseCase<RegisterCompanyRequest, Response> _RegisterCompanyUseCase = registerCompanyUseCase;
 
         [HttpGet]
-        public async Task<IActionResult> ListCompaniesAsync()
+        public Task<IActionResult> ListCompaniesAsync()
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCompanyAsync([FromRoute] Guid id)
+        public Task<IActionResult> GetCompanyAsync([FromRoute] Guid id)
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }
@@ -33,13 +35,13 @@ namespace Scheduler.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateCompanyAsync([FromRoute] Guid id, [FromBody] object company)
+        public Task<IActionResult> UpdateCompanyAsync([FromRoute] Guid id, [FromBody] object company)
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompanyAsync([FromRoute] Guid id)
+        public Task<IActionResult> DeleteCompanyAsync([FromRoute] Guid id)
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }

@@ -1,4 +1,6 @@
-﻿namespace Scheduler.Application.Infrastructure.Data.Shared.Entity
+﻿using System;
+
+namespace Scheduler.Application.Infrastructure.Data.Shared.Entity
 {
     internal abstract class BaseEntity
     {

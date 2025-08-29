@@ -1,6 +1,8 @@
 ﻿using Scheduler.Application.Features.Shared.IO.Validation;
 using Scheduler.Application.Features.Shared.ValueObjects;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Validators
 {

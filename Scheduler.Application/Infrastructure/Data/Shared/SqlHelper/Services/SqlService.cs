@@ -2,6 +2,8 @@
 using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
 using Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Pagination;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services
 {

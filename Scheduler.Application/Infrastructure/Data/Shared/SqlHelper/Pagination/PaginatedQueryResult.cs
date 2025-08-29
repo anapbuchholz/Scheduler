@@ -1,4 +1,6 @@
-﻿namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Pagination
+﻿using System.Collections.Generic;
+
+namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Pagination
 {
     internal sealed class PaginatedQueryResult<T> where T : class
     {

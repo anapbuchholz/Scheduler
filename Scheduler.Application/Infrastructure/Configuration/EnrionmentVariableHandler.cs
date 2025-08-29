@@ -1,4 +1,6 @@
-﻿namespace Scheduler.Application.Infrastructure.Configuration
+﻿using System;
+
+namespace Scheduler.Application.Infrastructure.Configuration
 {
     public static class EnrionmentVariableHandler
     {
