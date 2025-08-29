@@ -26,7 +26,6 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
             return await connection.QueryFirstOrDefaultAsync<CompanyEntity>(query, new { DocumentNumber = documentNumber });
         }
 
-
         public async Task RegisterCompanyAsync(CompanyEntity company)
         {
             var command = CompanySqlConstants.INSERT_COMPANY;

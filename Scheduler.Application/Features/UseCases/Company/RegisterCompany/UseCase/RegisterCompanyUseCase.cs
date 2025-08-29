@@ -16,7 +16,7 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IRequestValidator<RegisterCompanyRequest> _validator = validator;
 
-        public async Task<Response> Execute(RegisterCompanyRequest input)
+        public async Task<Response> ExecuteAsync(RegisterCompanyRequest input)
         {
             var validationResult = await _validator.Validate(input);
             if (!validationResult.IsValid)

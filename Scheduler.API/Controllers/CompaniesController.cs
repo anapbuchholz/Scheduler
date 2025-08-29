@@ -2,6 +2,7 @@
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
 using System;
 using System.Threading.Tasks;
@@ -11,9 +12,11 @@ namespace Scheduler.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public sealed class CompaniesController(
-        IUseCase<RegisterCompanyRequest, Response> registerCompanyUseCase) : BaseController
+        IUseCase<RegisterCompanyRequest, Response> registerCompanyUseCase,
+        IUseCase<GetCompanyRequest, Response> getCompanyUsecase) : BaseController
     {
-        private readonly IUseCase<RegisterCompanyRequest, Response> _RegisterCompanyUseCase = registerCompanyUseCase;
+        private readonly IUseCase<RegisterCompanyRequest, Response> _registerCompanyUseCase = registerCompanyUseCase;
+        private readonly IUseCase<GetCompanyRequest, Response> _getCompanyUseCase = getCompanyUsecase;
 
         [HttpGet]
         public Task<IActionResult> ListCompaniesAsync()
@@ -22,15 +25,16 @@ namespace Scheduler.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public Task<IActionResult> GetCompanyAsync([FromRoute] Guid id)
+        public async Task<IActionResult> GetCompanyAsync([FromRoute] Guid id)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            var response = await _getCompanyUseCase.ExecuteAsync(new GetCompanyRequest(id));
+            return GetHttpResponse(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> RegisterCompanyAsync([FromBody] RegisterCompanyRequest input)
         {
-            var response = await _RegisterCompanyUseCase.Execute(input);
+            var response = await _registerCompanyUseCase.ExecuteAsync(input);
             return GetHttpResponse(response);
         }
 

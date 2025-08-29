@@ -3,8 +3,13 @@ using System;
 
 namespace Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase
 {
-    internal sealed class GetCompanyRequest : IRequest
+    public sealed class GetCompanyRequest : IRequest
     {
+        public GetCompanyRequest(Guid id)
+        {
+            Id = id;
+        }
+
         public Guid Id { get; set; }
     }
 }

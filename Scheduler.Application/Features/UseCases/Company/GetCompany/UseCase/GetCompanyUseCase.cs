@@ -1,15 +1,24 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
-using System;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase
 {
-    internal sealed class GetCompanyUseCase : IUseCase<GetCompanyRequest, Response>
+    internal sealed class GetCompanyUseCase(ICompanyRepository companyRepository) : IUseCase<GetCompanyRequest, Response>
     {
-        public Task<Response> Execute(GetCompanyRequest input)
+        private readonly ICompanyRepository _companyRepository = companyRepository;
+
+        public async Task<Response> ExecuteAsync(GetCompanyRequest input)
         {
-            throw new NotImplementedException();
+            var company = await _companyRepository.GetCompanyAsync(input.Id);
+
+            if (company == null)
+            {
+                return Response.CreateNotFoundResponse();
+            }
+
+            return Response.CreateOkResponse(company);
         }
     }
 }

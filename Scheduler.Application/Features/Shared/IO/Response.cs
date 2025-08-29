@@ -37,7 +37,7 @@ namespace Scheduler.Application.Features.Shared.IO
             return new Response(HttpStatusCode.Created, body: body);
         }
 
-        public static Response CreateOkResponset(in object? body = null)
+        public static Response CreateOkResponse(in object? body = null)
         {
             return new Response(HttpStatusCode.OK, body: body);
         }
