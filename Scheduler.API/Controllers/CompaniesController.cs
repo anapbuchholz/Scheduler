@@ -3,6 +3,7 @@ using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase;
+using Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
 using System;
 using System.Threading.Tasks;
@@ -13,15 +14,19 @@ namespace Scheduler.API.Controllers
     [Route("api/[controller]")]
     public sealed class CompaniesController(
         IUseCase<RegisterCompanyRequest, Response> registerCompanyUseCase,
-        IUseCase<GetCompanyRequest, Response> getCompanyUsecase) : BaseController
+        IUseCase<GetCompanyRequest, Response> getCompanyUsecase,
+        IUseCase<ListCompaniesRequest, Response> listCompanyUseCase) : BaseController
     {
         private readonly IUseCase<RegisterCompanyRequest, Response> _registerCompanyUseCase = registerCompanyUseCase;
         private readonly IUseCase<GetCompanyRequest, Response> _getCompanyUseCase = getCompanyUsecase;
+        private readonly IUseCase<ListCompaniesRequest, Response> _listCompanyUseCase = listCompanyUseCase;
 
         [HttpGet]
-        public Task<IActionResult> ListCompaniesAsync()
+        public async Task<IActionResult> ListCompaniesAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            var request = new ListCompaniesRequest(name, documentNumber);
+            var response = await _listCompanyUseCase.ExecuteAsync(request);
+            return GetHttpResponse(response);
         }
 
         [HttpGet("{id}")]

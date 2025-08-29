@@ -35,11 +35,11 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
-                DocumentNumber = input.DocumentNumber!,
-                TradeName = input.TradeName!,
-                LegalName = input.LegalName!,
-                Email = input.Email!,
-                Phone = input.PhoneNumber!
+                DocumentNumber = input.DocumentNumber!.Trim(),
+                TradeName = input.TradeName!.Trim(),
+                LegalName = input.LegalName!.Trim(),
+                Email = input.Email?.Trim(),
+                Phone = input.PhoneNumber?.Trim()
             };
             await _companyRepository.RegisterCompanyAsync(entity);
 

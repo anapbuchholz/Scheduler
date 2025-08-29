@@ -2,6 +2,7 @@
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository
@@ -24,6 +25,27 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
 
             var connection = _context.GetConnection();
             return await connection.QueryFirstOrDefaultAsync<CompanyEntity>(query, new { DocumentNumber = documentNumber });
+        }
+
+        public async Task<List<CompanyEntity>> ListCompaniesAsync(string? name, string? documentNumber)
+        {
+            var query = CompanySqlConstants.LIST_COMPANIES;
+            var parameters = new DynamicParameters();
+            
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query += " AND (LOWER(trade_name) LIKE @Name OR LOWER(legal_name) LIKE @Name)";
+                parameters.Add("Name", $"%{name.ToLower()}%");
+            }
+            if (!string.IsNullOrWhiteSpace(documentNumber))
+            {
+                query += " AND tax_id = @DocumentNumber";
+                parameters.Add("DocumentNumber", documentNumber);
+            }
+
+            var connection = _context.GetConnection();
+            var companyList = await connection.QueryAsync<CompanyEntity>(query, parameters);
+            return companyList.AsList();
         }
 
         public async Task RegisterCompanyAsync(CompanyEntity company)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Features.UseCases.Company.GetCompany;
+using Scheduler.Application.Features.UseCases.Company.ListCompanies;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany;
 
 namespace Scheduler.Application.Features.UseCases.Company
@@ -10,6 +11,7 @@ namespace Scheduler.Application.Features.UseCases.Company
         {
             services.AddRegisterCompany();
             services.AddGetCompany();
+            services.AddListCompanies();
             return services;
         }
     }
