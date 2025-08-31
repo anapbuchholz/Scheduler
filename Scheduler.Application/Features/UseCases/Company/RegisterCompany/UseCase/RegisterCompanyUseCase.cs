@@ -18,7 +18,7 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
 
         public async Task<Response> ExecuteAsync(RegisterCompanyRequest input)
         {
-            var validationResult = await _validator.Validate(input);
+            var validationResult = await _validator.ValidateAsync(input);
             if (!validationResult.IsValid)
             {
                 return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);

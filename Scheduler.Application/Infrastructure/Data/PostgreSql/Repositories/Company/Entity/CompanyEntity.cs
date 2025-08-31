@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity
 {
-    internal class CompanyEntity : BaseEntity
+    internal sealed class CompanyEntity : BaseEntity
     {
         public string TradeName { get; set; } = "INVALID REGISTER";
         public string LegalName { get; set; } = "INVALID REGISTER";
