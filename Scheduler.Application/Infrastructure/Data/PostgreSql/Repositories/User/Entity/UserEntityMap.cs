@@ -14,6 +14,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
             Map(x => x.IsAdmin).ToColumn("is_admin");
             Map(x => x.CompanyId).ToColumn("company_id");
             Map(x => x.CreatedAt).ToColumn("created_at");
+            Map(x => x.ExternalId).ToColumn("external_id");
         }
     }
 }

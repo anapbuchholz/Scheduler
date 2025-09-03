@@ -3,7 +3,7 @@ using System;
 
 namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
 {
-    internal sealed class RegisterUserRequest : IRequest
+    public sealed class RegisterUserRequest : IRequest
     {
         public string? Name { get; set; }
         public string? DocumentNumber { get; set; }

@@ -2,7 +2,7 @@
 using Scheduler.Application.Features.Shared.Cypher;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
-using Scheduler.Application.Infrastructure.Authentication;
+using Scheduler.Application.Infrastructure.Authentication.Services;
 using Scheduler.Application.Infrastructure.Configuration;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
@@ -27,6 +27,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
 
         public async Task<Response> ExecuteAsync(RegisterUserRequest input)
         {
+            //TODO: IMPLEMENT VALIDATIONS
             var validationResult = await _validator.ValidateAsync(input);
             if (!validationResult.IsValid)
             {
@@ -45,17 +46,19 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                 return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
             }
 
+            var userPermission = input.IsAdmin ? 1 : 0;
+            var registerOperation = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name} - {userPermission}");
+            if (!registerOperation.RegisteredWithSuccess)
+            {
+                return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
+            }
+
             var AesKey = EnrionmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
             var passwordHash = AES.Encrypt(input.Password!, AesKey);
-
-            //TODO: IMPLEMENTAR INTEGRAÇÃO COM FIREBASE PARA CADASTRAR USUÁRIO
-            //var userPermission = input.IsAdmin ? 1 : 0;
-            //var registeredInFirebaseWithSuccess = await _authenticationService.RegisterAsync(input.Email!, input.Password!, userPermission);
-            //if(!registeredInFirebaseWithSuccess) throw...
-
             var userEntity = new UserEntity
             {
                 Id = Guid.NewGuid(),
+                ExternalId = registerOperation.ExternalId!,
                 CreatedAt = DateTime.UtcNow,
                 IsAdmin = input.IsAdmin,
                 Name = input.Name!,

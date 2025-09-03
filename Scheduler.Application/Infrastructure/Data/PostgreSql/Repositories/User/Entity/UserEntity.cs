@@ -9,7 +9,8 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
         public string DocumentNumber { get; set; } = "INVALID REGISTER";
         public string Email { get; set; } = "INVALID REGISTER";
         public string PasswordHash { get; set; } = "INVALID REGISTER";
+        public string ExternalId { get; set; } = "INVALID REGISTER";
         public bool IsAdmin { get; set; }
-        public Guid CompanyId { get; set; } 
+        public Guid CompanyId { get; set; }
     }
 }
