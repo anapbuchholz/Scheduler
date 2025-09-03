@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Infrastructure.Configuration;
 using System.Net;
 
 namespace Scheduler.API.Controllers.Base
@@ -19,7 +20,7 @@ namespace Scheduler.API.Controllers.Base
                 HttpStatusCode.NotFound => NotFound(httpResponse),
                 HttpStatusCode.OK => Ok(httpResponse),
                 HttpStatusCode.Created => Created(uri!, httpResponse),
-                HttpStatusCode.InternalServerError => StatusCode(500, response.ValidationErrorMessage),
+                HttpStatusCode.InternalServerError => StatusCode(500, EnrionmentVariableHandler.IsDevelopment() ? response.ValidationErrorMessage : "Ocorreu um erro inesperado"),
                 _ => NoContent()
             };
         }

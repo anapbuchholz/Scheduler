@@ -18,32 +18,39 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
 
         public async Task<Response> ExecuteAsync(RegisterCompanyRequest input)
         {
-            var validationResult = await _validator.ValidateAsync(input);
-            if (!validationResult.IsValid)
+            try
             {
-                return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+                var validationResult = await _validator.ValidateAsync(input);
+                if (!validationResult.IsValid)
+                {
+                    return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+                }
+
+                var existingCompany = await _companyRepository.GetCompanyByDocumentNumberAsync(input.DocumentNumber!);
+                if (existingCompany != null)
+                {
+                    return Response.CreateConflictResponse("Já existe uma empresa cadastrada com esse número de documento.");
+                }
+
+                var entity = new CompanyEntity
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true,
+                    DocumentNumber = input.DocumentNumber!.Trim(),
+                    TradeName = input.TradeName!.Trim(),
+                    LegalName = input.LegalName!.Trim(),
+                    Email = input.Email?.Trim(),
+                    Phone = input.PhoneNumber?.Trim()
+                };
+                await _companyRepository.RegisterCompanyAsync(entity);
+
+                return Response.CreateCreatedResponse();
             }
-
-            var existingCompany = await _companyRepository.GetCompanyByDocumentNumberAsync(input.DocumentNumber!);
-            if (existingCompany != null)
+            catch (Exception ex)
             {
-                return Response.CreateConflictResponse("Já existe uma empresa cadastrada com esse número de documento.");
+                return Response.CreateInternalErrorResponse($"{nameof(RegisterCompanyUseCase)}->{nameof(ExecuteAsync)}: {ex.Message}");
             }
-
-            var entity = new CompanyEntity
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true,
-                DocumentNumber = input.DocumentNumber!.Trim(),
-                TradeName = input.TradeName!.Trim(),
-                LegalName = input.LegalName!.Trim(),
-                Email = input.Email?.Trim(),
-                Phone = input.PhoneNumber?.Trim()
-            };
-            await _companyRepository.RegisterCompanyAsync(entity);
-
-            return Response.CreateCreatedResponse();
         }
     }
 }

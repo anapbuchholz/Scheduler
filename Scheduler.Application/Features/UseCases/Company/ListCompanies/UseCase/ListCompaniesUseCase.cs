@@ -1,6 +1,7 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
+using System;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase
@@ -11,8 +12,15 @@ namespace Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase
 
         public async Task<Response> ExecuteAsync(ListCompaniesRequest input)
         {
-            var companies = await _companyRepository.ListCompaniesAsync(input.Name, input.DocumentNumber);
-            return Response.CreateOkResponse(companies);
+            try
+            {
+                var companies = await _companyRepository.ListCompaniesAsync(input.Name, input.DocumentNumber);
+                return Response.CreateOkResponse(companies);
+            }
+            catch (Exception ex)
+            {
+                return Response.CreateInternalErrorResponse($"{nameof(ListCompaniesUseCase)}->{nameof(ExecuteAsync)}: {ex.Message}");
+            }            
         }
     }
 }

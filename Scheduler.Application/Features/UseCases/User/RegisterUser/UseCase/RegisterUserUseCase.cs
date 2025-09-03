@@ -27,49 +27,56 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
 
         public async Task<Response> ExecuteAsync(RegisterUserRequest input)
         {
-            //TODO: IMPLEMENT VALIDATIONS
-            var validationResult = await _validator.ValidateAsync(input);
-            if (!validationResult.IsValid)
+            try
             {
-                return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+                //TODO: IMPLEMENT VALIDATIONS
+                var validationResult = await _validator.ValidateAsync(input);
+                if (!validationResult.IsValid)
+                {
+                    return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+                }
+
+                var existingUser = await _userRepository.GetUserByEmailAsync(input.Email!);
+                if (existingUser != null)
+                {
+                    return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse email.");
+                }
+
+                var usersCompany = await _companyRepository.GetCompanyAsync(input.CompanyId!.Value);
+                if (usersCompany != null)
+                {
+                    return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
+                }
+
+                var userPermission = input.IsAdmin ? 1 : 0;
+                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name} - {userPermission}");
+                if (!RegisteredWithSuccess)
+                {
+                    return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
+                }
+
+                var AesKey = EnrionmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
+                var passwordHash = AES.Encrypt(input.Password!, AesKey);
+                var userEntity = new UserEntity
+                {
+                    Id = Guid.NewGuid(),
+                    ExternalId = ExternalId!,
+                    CreatedAt = DateTime.UtcNow,
+                    IsAdmin = input.IsAdmin,
+                    Name = input.Name!,
+                    Email = input.Email!,
+                    CompanyId = input.CompanyId!.Value,
+                    DocumentNumber = input.DocumentNumber!,
+                    PasswordHash = passwordHash
+                };
+                await _userRepository.RegisterUserAsync(userEntity);
+
+                return Response.CreateCreatedResponse();
             }
-
-            var existingUser = await _userRepository.GetUserByEmailAsync(input.Email!);
-            if (existingUser != null)
+            catch (Exception ex)
             {
-                return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse email.");
+                return Response.CreateInternalErrorResponse($"{nameof(RegisterUserUseCase)}->{nameof(ExecuteAsync)}: {ex.Message}");
             }
-
-            var usersCompany = await _companyRepository.GetCompanyAsync(input.CompanyId!.Value);
-            if (usersCompany != null)
-            {
-                return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
-            }
-
-            var userPermission = input.IsAdmin ? 1 : 0;
-            var registerOperation = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name} - {userPermission}");
-            if (!registerOperation.RegisteredWithSuccess)
-            {
-                return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
-            }
-
-            var AesKey = EnrionmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
-            var passwordHash = AES.Encrypt(input.Password!, AesKey);
-            var userEntity = new UserEntity
-            {
-                Id = Guid.NewGuid(),
-                ExternalId = registerOperation.ExternalId!,
-                CreatedAt = DateTime.UtcNow,
-                IsAdmin = input.IsAdmin,
-                Name = input.Name!,
-                Email = input.Email!, 
-                CompanyId = input.CompanyId!.Value,
-                DocumentNumber = input.DocumentNumber!,
-                PasswordHash = passwordHash
-            };
-            await _userRepository.RegisterUserAsync(userEntity);
-
-            return Response.CreateCreatedResponse();
         }
     }
 }
