@@ -29,7 +29,11 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
         {
             try
             {
-                //TODO: IMPLEMENT VALIDATIONS
+                //TODO: OBTER DADOS DO USUÁRIO LOGADO ATRAVÉS DO TOKEN E VALIDAR SE ELE É ADMINISTRADOR.
+                //SE NÃO FOR ADMINISTRADOR, SÓ PODE CADASTRAR USUÁRIO QUE SEJA DA MESMA EMPRESA.
+                //SE FOR ADMINISTRADOR PODE CADASTRAR USUÁRIO DE QUALQUER EMPRESA.
+                //APENAS USUÁRIOS ADMINISTRADORES PODEM CADASTRAR OUTROS USUÁRIOS ADMINISTRADORES.
+
                 var validationResult = await _validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {
@@ -42,14 +46,17 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                     return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse email.");
                 }
 
-                var usersCompany = await _companyRepository.GetCompanyAsync(input.CompanyId!.Value);
-                if (usersCompany != null)
+                if(!input.IsAdmin)
                 {
-                    return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
+                    var usersCompany = await _companyRepository.GetCompanyAsync(input.CompanyId!.Value);
+                    if (usersCompany != null)
+                    {
+                        return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
+                    }
                 }
 
-                var userPermission = input.IsAdmin ? 1 : 0;
-                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name} - {userPermission}");
+                var userPermission = input.IsAdmin ? "1" : "0";
+                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name}-{userPermission}");
                 if (!RegisteredWithSuccess)
                 {
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
@@ -65,7 +72,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                     IsAdmin = input.IsAdmin,
                     Name = input.Name!,
                     Email = input.Email!,
-                    CompanyId = input.CompanyId!.Value,
+                    CompanyId = input.IsAdmin ? null : input.CompanyId!.Value,
                     DocumentNumber = input.DocumentNumber!,
                     PasswordHash = passwordHash
                 };

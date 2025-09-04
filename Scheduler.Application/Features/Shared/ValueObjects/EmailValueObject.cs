@@ -11,7 +11,7 @@ namespace Scheduler.Application.Features.Shared.ValueObjects
         {
         }
 
-        public  bool IsValidEmail { get { return !Value.IsValidEmail(); } }
+        public  bool IsValidEmail { get { return Value.IsValidEmail(); } }
 
         public static EmailValueObject Create(in string email)
         {
