@@ -26,7 +26,18 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7237;http://localhost:5013",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "POSTGRE_SQL_CONNECTION_STRING": "Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=admin",
+        "CYPHER_AES_KEY": "59794549-ea80-4418-9ef3-f935d8f0174a",
+        "FIREBASE_ACCOUNT_TYPE": "service_account",
+        "FIREBASE_ACCOUNT_PROJECT_ID": "scheduler-bot-010596",
+        "FIREBASE_ACCOUNT_PRIVATE_KEY_ID": "8f01fb8e93b61dd563510b9100dbb1679f677fec",
+        "FIREBASE_ACCOUNT_PRIVATE_KEY": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDLsMDnG6U3q6in\nl6eEqB6M7xd2r7XxRyDOEgM8zbaUrXuCRtCLBfLfn93GLiHOM8zXiDgdpuPYvxUH\nlwEXDbiRkqPCTWzpoMmxVPkZ2nmWUIkZQTj9rpJqABZMN49aCsLA0/zyrcJJtoXU\nCDJJQUxWSDQWjonD+aFMQoZmSguzyX9cdCrELdWGUlSMAlje3BeKTVHIeesKN7MR\nHXr41xaMqYdMg38fl770W4sT0y0JZK3Z8nVYXIilKsnmLpkOSg2Moh8M+WlgifD+\nY0kr071z6UB/Hv8L9UheQ9sIeuZMVwmLU3pwL8hBz2vMbA/CYYz3CZllcuRudZYV\nLuNFaN5VAgMBAAECggEAGXyPEovUvzPBKWEyMojXs8I54R2oyh0gh3BdC9dgnFdd\nsCYcs3yF0IHgHctJaxPzsldG0D0A3u6/2qCEICaVHM/ooigOc+gsvH3ZomjCFHMU\nyH5u+10D0HQc1iIQk49roXWU/aeMuyz1r1tsMVrUiqpDrDvfFJCwZEqhpvxmXPMl\nA78yrcTSPWlFa6gsZPzIN6NlTN0leQRpNdvMw097+9SQ10bMB+3dhssFjYiBLJ6L\nfaKfbUv20krUHYYCQSTw7KiMc8rjEujGYlSAn7kWfO+SSIHeC9c3M28VWtlWyy0L\ng/j8feDYdBAXxPoSGYNbdsoi/xR42SrJNJX/V2uneQKBgQDuePTGDrUo6tuXgHtz\nu2sndlAxtWSx5/SP+gycQJlE8XD2yzeXtjB67M/WHZ/Pdb7I0jVlnsSmXlvRhNgw\nUGjfPt/6+gnZaGFpajTnL+ZcCT2kxXCqYK/EKT3ak+JYWgr0DNJNgGwBJGs2aM/2\nHAHE4PtLKkdEuXNj+Bp7/djBqQKBgQDaqVivSILD75b2FWWZT7QdHwNg9EeXdKLU\nmSVAfibRLtAeEA/+ZasO5/l15gUT2aoXEWWpwoZz0zuRHyR7Y9jT6ESFkxHQNTn+\nup9hOFIdweyjNR9NHY31MrJTt6u13eKjJdgE1S/uk/NF2M8p34VkkoloNL2IqdYA\nhuOAd7m6zQKBgQDLdtABHBNdMeThwnGSMNof9UY+4zFiyTFUllekCUm8FPP43TI1\ncvCyMNKzMNtlOmTpGtEMPwYxnFhizyFVN4YC07ZugF9e6zwRoNg6WBgHdqrtpreV\n5qCQkU+A6qQ4Fbs6tqXIEkYUQ2pmJc8pgIPR4tMFMrFT5ZaaONj/6XnC4QKBgClz\nwSQ5ktCiMvQjykbuHS8IGhPfO1MzAUtcXPuE7sbpIPsSAHYxv+PrhhcbrAq/UMde\nvO8ZuXNrr/cq+DeMDibd+V95Kf9Wl8/6gQxlKOwLP1kRUQXFfIvnOHc2co7fqX9U\nRUdlQtjvo0aye1Ns1FTkkrf2h5fI2pDvAWHxUHxhAoGBAMtqyESBB+uePA0FH/vg\nWbt9QZtg7z2XxIlSztwntiy54pFbaK9+h4ve1RHncfB6KvLzYkk6a8uaYvVbWEMi\nc5FB0K8dZh821yVK2I0j8ByYjn0H+STg1ZZliY0KKjTjcnGHDkvUM6cg/QEMIpa4\nwV+v5FS7UA+saZ8lo2mCg6gg\n-----END PRIVATE KEY-----\n",
+        "FIREBASE_ACCOUNT_CLIENT_EMAIL": "firebase-adminsdk-fbsvc@scheduler-bot-010596.iam.gserviceaccount.com",
+        "FIREBASE_ACCOUNT_CLIENT_ID": "114779863676094360376",
+        "FIREBASE_ACCOUNT_TOKEN_URI": "https://oauth2.googleapis.com/token",
+        "FIREBASE_ACCOUNT_UNIVERSE_DOMAIN": "googleapis.com",
+        "FIRE_BASE_API_KEY": "AIzaSyAGRLyvOkByjng-P52lLg7AYzs4jsAP3lY"
       }
     },
     "IIS Express": {
