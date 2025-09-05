@@ -10,7 +10,7 @@ namespace Scheduler.Application.Infrastructure.Authentication
     {
         public static IServiceCollection AddAuthentication(this IServiceCollection services)
         {
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IFireBaseAuthenticationService, FireBaseAuthenticationService>();
             AddFirebaseAdmin();
             return services;
         }

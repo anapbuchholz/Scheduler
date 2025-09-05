@@ -16,12 +16,12 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
         IUserRepository userRepository,
         ICompanyRepository companyRepository,
         IRequestValidator<RegisterUserRequest> validator,
-        IAuthenticationService authenticationService) : IUseCase<RegisterUserRequest, Response>
+        IFireBaseAuthenticationService authenticationService) : IUseCase<RegisterUserRequest, Response>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IRequestValidator<RegisterUserRequest> _validator = validator;
-        private readonly IAuthenticationService _authenticationService = authenticationService;
+        private readonly IFireBaseAuthenticationService _authenticationService = authenticationService;
 
         private const string CypherAesKeyEnvironmentVariableName = "CYPHER_AES_KEY";
 
@@ -56,7 +56,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                 }
 
                 var userPermission = input.IsAdmin ? "1" : "0";
-                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterUserAsync(input.Email!, input.Password!, $"{input.Name}-{userPermission}");
+                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterFireBaseUserAsync(input.Email!, input.Password!, $"{input.Name}-{userPermission}");
                 if (!RegisteredWithSuccess)
                 {
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
