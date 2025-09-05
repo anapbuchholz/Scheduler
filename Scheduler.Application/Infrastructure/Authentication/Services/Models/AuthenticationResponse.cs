@@ -20,7 +20,7 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.Models
         public string? IdToken { get; set; }
 
         [JsonPropertyName("registered")]
-        public string? Registered { get; set; }
+        public bool Registered { get; set; }
 
         [JsonPropertyName("refreshToken")]
         public string? RefreshToken { get; set; }

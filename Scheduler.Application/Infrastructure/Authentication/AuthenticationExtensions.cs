@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Infrastructure.Authentication.Services;
 using Scheduler.Application.Infrastructure.Configuration;
+using System;
 
 namespace Scheduler.Application.Infrastructure.Authentication
 {
@@ -10,7 +11,17 @@ namespace Scheduler.Application.Infrastructure.Authentication
     {
         public static IServiceCollection AddAuthentication(this IServiceCollection services)
         {
-            services.AddSingleton<IFireBaseAuthenticationService, FireBaseAuthenticationService>();
+            var apiKey = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_KEY");
+            var firebaseBasePath = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_BASE_PATH");
+            var fireBaseAuthUri = $"{firebaseBasePath}{apiKey}";
+            services.AddHttpClient<IFireBaseAuthenticationService, FireBaseAuthenticationService>(client =>
+            {
+                client.BaseAddress = new Uri(fireBaseAuthUri);
+                client.Timeout = TimeSpan.FromSeconds(30);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("User-Agent", "SchedulerApp");
+            });
+
             AddFirebaseAdmin();
             return services;
         }

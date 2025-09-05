@@ -20,7 +20,6 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services
                 returnSecureToken = true
             };
 
-            //TODO: INJETAR O HTTPcLIENT VIA DEPENDENCY INJECTION, PASSAR A BASE ADDRESS E A API KEY VIA CONFIGURAÇÃO.
             var response = await _httpClient.PostAsJsonAsync("", request);
             if (response.IsSuccessStatusCode)
             {
