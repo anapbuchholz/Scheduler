@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
@@ -38,6 +39,7 @@ namespace Scheduler.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequest request)
         {
             var result = await _registerUserUseCase.ExecuteAsync(request);

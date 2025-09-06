@@ -11,7 +11,7 @@ namespace Scheduler.Application.Infrastructure
         {
             services.AddShared();
             services.AddPostgreSql();
-            services.AddAuthentication();
+            services.AddFireBaseAuthentication();
             return services;
         }
     }

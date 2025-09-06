@@ -1,6 +1,9 @@
 ﻿using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Scheduler.Application.Infrastructure.Authentication.Attributes;
 using Scheduler.Application.Infrastructure.Authentication.Services;
 using Scheduler.Application.Infrastructure.Configuration;
 using System;
@@ -9,24 +12,16 @@ namespace Scheduler.Application.Infrastructure.Authentication
 {
     internal static class AuthenticationExtensions
     {
-        public static IServiceCollection AddAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddFireBaseAuthentication(this IServiceCollection services)
         {
-            var apiKey = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_KEY");
-            var firebaseBasePath = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_BASE_PATH");
-            var fireBaseAuthUri = $"{firebaseBasePath}{apiKey}";
-            services.AddHttpClient<IFireBaseAuthenticationService, FireBaseAuthenticationService>(client =>
-            {
-                client.BaseAddress = new Uri(fireBaseAuthUri);
-                client.Timeout = TimeSpan.FromSeconds(30);
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                client.DefaultRequestHeaders.Add("User-Agent", "SchedulerApp");
-            });
+            AddFirebaseAdmin(services);
+            AddFireBaseRestApiService(services);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandlerAttribute>(JwtBearerDefaults.AuthenticationScheme, (o) => { });
 
-            AddFirebaseAdmin();
             return services;
         }
 
-        private static void AddFirebaseAdmin()
+        private static void AddFirebaseAdmin(IServiceCollection services)
         {
             var credentials = new JsonCredentialParameters
             {
@@ -40,9 +35,23 @@ namespace Scheduler.Application.Infrastructure.Authentication
                 UniverseDomain = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_UNIVERSE_DOMAIN")
             };
 
-            FirebaseApp.Create(new AppOptions()
+            services.AddSingleton(FirebaseApp.Create(new AppOptions()
             {
                 Credential = GoogleCredential.FromJsonParameters(credentials)
+            }));
+        }
+
+        private static void AddFireBaseRestApiService(IServiceCollection services)
+        {
+            var apiKey = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_KEY");
+            var firebaseBasePath = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_BASE_PATH");
+            var fireBaseAuthUri = $"{firebaseBasePath}{apiKey}";
+            services.AddHttpClient<IFireBaseAuthenticationService, FireBaseAuthenticationService>(client =>
+            {
+                client.BaseAddress = new Uri(fireBaseAuthUri);
+                client.Timeout = TimeSpan.FromSeconds(30);
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("User-Agent", "SchedulerApp");
             });
         }
     }
