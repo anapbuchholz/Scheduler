@@ -41,7 +41,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                 var loggedUser = await _userRepository.GetUserByEmailAsync(_userSession.UserEmail);
                 if (loggedUser == null)
                 {
-                    return Response.CreateUnauthorizedResponse();
+                    return Response.CreateInternalErrorResponse("Falha ao buscar informações do usuário logado");
                 }
 
                 if (!_userSession.IsAdmin && request.IsAdmin)
