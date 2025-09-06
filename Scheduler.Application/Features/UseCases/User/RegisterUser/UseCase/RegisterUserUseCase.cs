@@ -28,55 +28,66 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
 
         private const string CypherAesKeyEnvironmentVariableName = "CYPHER_AES_KEY";
 
-        public async Task<Response> ExecuteAsync(RegisterUserRequest input)
+        public async Task<Response> ExecuteAsync(RegisterUserRequest request)
         {
             try
             {
-                //TODO: OBTER DADOS DO USUÁRIO LOGADO ATRAVÉS DO TOKEN E VALIDAR SE ELE É ADMINISTRADOR.
-                //SE NÃO FOR ADMINISTRADOR, SÓ PODE CADASTRAR USUÁRIO QUE SEJA DA MESMA EMPRESA.
-                //SE FOR ADMINISTRADOR PODE CADASTRAR USUÁRIO DE QUALQUER EMPRESA.
-                //APENAS USUÁRIOS ADMINISTRADORES PODEM CADASTRAR OUTROS USUÁRIOS ADMINISTRADORES.
-
-                var validationResult = await _validator.ValidateAsync(input);
+                var validationResult = await _validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                 {
                     return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
                 }
 
-                var existingUser = await _userRepository.GetUserByEmailAsync(input.Email!);
+                var loggedUser = await _userRepository.GetUserByEmailAsync(_userSession.UserEmail);
+                if (loggedUser == null)
+                {
+                    return Response.CreateUnauthorizedResponse();
+                }
+
+                if (!_userSession.IsAdmin && request.IsAdmin)
+                {
+                    return Response.CreateForbiddenResponse();
+                }
+
+                if (!loggedUser.IsAdmin && loggedUser.CompanyId != request.CompanyId)
+                {
+                    return Response.CreateForbiddenResponse();
+                }
+
+                var existingUser = await _userRepository.GetUserByEmailAsync(request.Email!);
                 if (existingUser != null)
                 {
                     return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse email.");
                 }
 
-                if(!input.IsAdmin)
+                if (!request.IsAdmin)
                 {
-                    var usersCompany = await _companyRepository.GetCompanyAsync(input.CompanyId!.Value);
+                    var usersCompany = await _companyRepository.GetCompanyAsync(request.CompanyId!.Value);
                     if (usersCompany != null)
                     {
                         return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
                     }
                 }
 
-                var userPermission = input.IsAdmin ? "1" : "0";
-                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterFireBaseUserAsync(input.Email!, input.Password!, $"{input.Name}-{userPermission}");
+                var userPermission = request.IsAdmin ? "1" : "0";
+                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterFireBaseUserAsync(request.Email!, request.Password!, $"{request.Name}-{userPermission}");
                 if (!RegisteredWithSuccess)
                 {
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
                 }
 
                 var AesKey = EnrionmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
-                var passwordHash = AES.Encrypt(input.Password!, AesKey);
+                var passwordHash = AES.Encrypt(request.Password!, AesKey);
                 var userEntity = new UserEntity
                 {
                     Id = Guid.NewGuid(),
                     ExternalId = ExternalId!,
                     CreatedAt = DateTime.UtcNow,
-                    IsAdmin = input.IsAdmin,
-                    Name = input.Name!,
-                    Email = input.Email!,
-                    CompanyId = input.IsAdmin ? null : input.CompanyId!.Value,
-                    DocumentNumber = input.DocumentNumber!,
+                    IsAdmin = request.IsAdmin,
+                    Name = request.Name!,
+                    Email = request.Email!,
+                    CompanyId = request.IsAdmin ? null : request.CompanyId!.Value,
+                    DocumentNumber = request.DocumentNumber!,
                     PasswordHash = passwordHash
                 };
                 await _userRepository.RegisterUserAsync(userEntity);
