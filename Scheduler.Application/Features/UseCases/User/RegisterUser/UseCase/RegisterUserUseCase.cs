@@ -2,7 +2,8 @@
 using Scheduler.Application.Features.Shared.Cypher;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
-using Scheduler.Application.Infrastructure.Authentication.Services;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Configuration;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
@@ -16,12 +17,14 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
         IUserRepository userRepository,
         ICompanyRepository companyRepository,
         IRequestValidator<RegisterUserRequest> validator,
-        IFireBaseAuthenticationService authenticationService) : IUseCase<RegisterUserRequest, Response>
+        IFireBaseAuthenticationService authenticationService,
+        IUserSession userSession) : IUseCase<RegisterUserRequest, Response>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IRequestValidator<RegisterUserRequest> _validator = validator;
         private readonly IFireBaseAuthenticationService _authenticationService = authenticationService;
+        private readonly IUserSession _userSession = userSession;
 
         private const string CypherAesKeyEnvironmentVariableName = "CYPHER_AES_KEY";
 

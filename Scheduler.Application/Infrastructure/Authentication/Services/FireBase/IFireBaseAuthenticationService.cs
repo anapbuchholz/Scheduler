@@ -1,7 +1,7 @@
 ﻿using FirebaseAdmin.Auth;
 using System.Threading.Tasks;
 
-namespace Scheduler.Application.Infrastructure.Authentication.Services
+namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase
 {
     internal interface IFireBaseAuthenticationService
     {

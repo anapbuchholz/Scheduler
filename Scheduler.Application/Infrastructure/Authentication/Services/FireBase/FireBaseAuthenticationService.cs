@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Scheduler.Application.Infrastructure.Authentication.Services
+namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase
 {
     internal sealed class FireBaseAuthenticationService(HttpClient httpClient) : IFireBaseAuthenticationService
     {

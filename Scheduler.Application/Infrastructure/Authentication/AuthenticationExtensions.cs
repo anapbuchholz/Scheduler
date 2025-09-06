@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Infrastructure.Authentication.Attributes;
-using Scheduler.Application.Infrastructure.Authentication.Services;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
 using Scheduler.Application.Infrastructure.Configuration;
 using System;
 
