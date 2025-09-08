@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
@@ -22,6 +23,7 @@ namespace Scheduler.API.Controllers
         private readonly IUseCase<ListCompaniesRequest, Response> _listCompanyUseCase = listCompanyUseCase;
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> ListCompaniesAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
         {
             var request = new ListCompaniesRequest(name, documentNumber);

@@ -15,6 +15,10 @@ namespace Scheduler.Application.Features.Shared.ValueObjects
 
         public bool IsValid { get { return Value != null && (Value.IsValidCpf() || Value.IsValidCnpj()); } }
 
+        public bool IsValidCpf { get { return Value != null && Value.IsValidCpf(); } }
+
+        public bool IsValidCnpj { get { return Value != null && Value.IsValidCnpj(); } }
+
         public static DocumentNumberValueObject Create(string documentNumber)
         {
             return new DocumentNumberValueObject(documentNumber, _maxLength, _minLength);

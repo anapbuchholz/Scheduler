@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Scheduler.Application.Infrastructure.Authentication;
+using Scheduler.Application.Infrastructure.Authorization;
 using Scheduler.Application.Infrastructure.Data.PostgreSql;
 using Scheduler.Application.Infrastructure.Data.Shared;
 
@@ -10,6 +12,8 @@ namespace Scheduler.Application.Infrastructure
         {
             services.AddShared();
             services.AddPostgreSql();
+            services.AddUserSession();
+            services.AddFireBaseAuthentication();
             return services;
         }
     }

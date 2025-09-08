@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Features.UseCases.Company;
+using Scheduler.Application.Features.UseCases.User;
 
 namespace Scheduler.Application.Features
 {
@@ -8,6 +9,7 @@ namespace Scheduler.Application.Features
         public static IServiceCollection AddFeatures(this IServiceCollection services)
         {
             services.AddCompanyFeatures();
+            services.AddUserFeatures();
             return services;
         }
     }

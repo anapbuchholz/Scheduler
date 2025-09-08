@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql
@@ -17,6 +18,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Validators
 {
-    internal class RegisterCompanyValidator : IRequestValidator<RegisterCompanyRequest>
+    internal sealed class RegisterCompanyValidator : IRequestValidator<RegisterCompanyRequest>
     {
         private readonly int _tradeNameMaxLength = 255;
         private readonly int _legalNameMaxLength = 255;
-        public Task<RequestValidationModel> Validate(RegisterCompanyRequest request)
+        public Task<RequestValidationModel> ValidateAsync(RegisterCompanyRequest request)
         {
             var errors = new List<string>();
 
@@ -42,7 +42,7 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             var email = EmailValueObject.Create(request.Email!);
             if (!email.IsNullOrEmpty)
             {
-                if (email.IsValidEmail)
+                if (!email.IsValidEmail)
                 {
                     errors.Add("O E-mail informado é inválido.");
                 }
