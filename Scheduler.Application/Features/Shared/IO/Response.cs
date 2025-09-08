@@ -22,11 +22,6 @@ namespace Scheduler.Application.Features.Shared.IO
             return new Response(HttpStatusCode.Forbidden, FORBIDDEN_RESULT_MESSAGE, null);
         }
 
-        public static Response CreateUnauthorizedResponse()
-        {
-            return new Response(HttpStatusCode.Unauthorized);
-        }
-
         public static Response CreateInvalidParametersResponse(in string message)
         {
             return new Response(HttpStatusCode.BadRequest, message);

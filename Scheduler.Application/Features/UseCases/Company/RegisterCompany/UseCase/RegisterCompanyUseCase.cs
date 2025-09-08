@@ -1,6 +1,7 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
+using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 using System;
@@ -10,16 +11,23 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCas
 {
     internal sealed class RegisterCompanyUseCase(
         ICompanyRepository companyRepository,
-        IRequestValidator<RegisterCompanyRequest> validator) 
+        IRequestValidator<RegisterCompanyRequest> validator,
+        IUserSession userSession) 
         : IUseCase<RegisterCompanyRequest, Response>
     {
         private readonly ICompanyRepository _companyRepository = companyRepository;
         private readonly IRequestValidator<RegisterCompanyRequest> _validator = validator;
+        private readonly IUserSession _userSession = userSession;
 
         public async Task<Response> ExecuteAsync(RegisterCompanyRequest input)
         {
             try
             {
+                if (!_userSession.IsAdmin)
+                {
+                    return Response.CreateForbiddenResponse();
+                }
+
                 var validationResult = await _validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {

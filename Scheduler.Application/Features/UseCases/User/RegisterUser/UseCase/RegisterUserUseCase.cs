@@ -32,26 +32,15 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
         {
             try
             {
+                if (!_userSession.IsAdmin)
+                {
+                    return Response.CreateForbiddenResponse();
+                }
+
                 var validationResult = await _validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                 {
                     return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
-                }
-
-                var loggedUser = await _userRepository.GetUserByEmailAsync(_userSession.UserEmail);
-                if (loggedUser == null)
-                {
-                    return Response.CreateInternalErrorResponse("Falha ao buscar informações do usuário logado");
-                }
-
-                if (!_userSession.IsAdmin && request.IsAdmin)
-                {
-                    return Response.CreateForbiddenResponse();
-                }
-
-                if (!loggedUser.IsAdmin && loggedUser.CompanyId != request.CompanyId)
-                {
-                    return Response.CreateForbiddenResponse();
                 }
 
                 var existingUser = await _userRepository.GetUserByEmailAsync(request.Email!);

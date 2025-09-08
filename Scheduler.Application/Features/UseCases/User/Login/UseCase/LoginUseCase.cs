@@ -15,19 +15,26 @@ namespace Scheduler.Application.Features.UseCases.User.Login.UseCase
 
         public async Task<Response> ExecuteAsync(LoginRequest request)
         {
-            var validationResult = await _validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
+            try
             {
-                return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
-            }
+                var validationResult = await _validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                {
+                    return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
+                }
 
-            var (IsAuthenticated, JwtToken) = await _fireBaseAuthenticationService.LoginInFireBase(request.Email!, request.Password!);
-            if (!IsAuthenticated)
+                var (IsAuthenticated, JwtToken) = await _fireBaseAuthenticationService.LoginInFireBase(request.Email!, request.Password!);
+                if (!IsAuthenticated)
+                {
+                    return Response.CreateNotFoundResponse();
+                }
+
+                return Response.CreateOkResponse(new { Token = JwtToken });
+            }
+            catch (System.Exception ex)
             {
-                return Response.CreateNotFoundResponse();
+                return Response.CreateInternalErrorResponse($"{nameof(LoginUseCase)}->{nameof(ExecuteAsync)}: {ex.Message}");
             }
-
-            return Response.CreateOkResponse(new { Token = JwtToken });
         }
     }
 }
