@@ -52,7 +52,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                 if (!request.IsAdmin)
                 {
                     var usersCompany = await _companyRepository.GetCompanyAsync(request.CompanyId!.Value);
-                    if (usersCompany != null)
+                    if (usersCompany == null)
                     {
                         return Response.CreateInvalidParametersResponse("A empresa informada não existe.");
                     }

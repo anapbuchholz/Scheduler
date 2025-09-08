@@ -42,7 +42,7 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             var email = EmailValueObject.Create(request.Email!);
             if (!email.IsNullOrEmpty)
             {
-                if (email.IsValidEmail)
+                if (!email.IsValidEmail)
                 {
                     errors.Add("O E-mail informado é inválido.");
                 }
