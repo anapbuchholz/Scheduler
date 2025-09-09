@@ -22,6 +22,11 @@ namespace Scheduler.Application.Features.Shared.IO
             return new Response(HttpStatusCode.Forbidden, FORBIDDEN_RESULT_MESSAGE, null);
         }
 
+        public static Response CreateUnauthorizedResponse()
+        {
+            return new Response(HttpStatusCode.Unauthorized);
+        }
+
         public static Response CreateInvalidParametersResponse(in string message)
         {
             return new Response(HttpStatusCode.BadRequest, message);
@@ -50,6 +55,11 @@ namespace Scheduler.Application.Features.Shared.IO
         public static Response CreateNotFoundResponse()
         {
             return new Response(HttpStatusCode.NotFound);
+        }
+
+        public static Response CreateNoContentResponse()
+        {
+            return new Response(HttpStatusCode.NoContent);
         }
     }
 }
