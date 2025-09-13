@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scheduler.Application.Infrastructure.Configuration;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,18 +8,11 @@ namespace Scheduler.Application.Features.Shared.Cypher
 {
     internal static class AES
     {
-        private const string _SALT = "g46dzQ80";
-        private const string _INITVECTOR = "OFRna74m*aze01xY";
+        private static readonly string _SALT = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_SALT");
+        private static readonly string _INITVECTOR = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_INITVECTOR");
 
-        private static byte[] _saltBytes;
-        private static byte[] _initVectorBytes;
-
-        static AES()
-        {
-            _saltBytes = Encoding.UTF8.GetBytes(_SALT);
-            _initVectorBytes = Encoding.UTF8.GetBytes(_INITVECTOR);
-        }
-
+        private static readonly byte[] _saltBytes = _saltBytes = Encoding.UTF8.GetBytes(_SALT);
+        private static readonly byte[] _initVectorBytes = _initVectorBytes = Encoding.UTF8.GetBytes(_INITVECTOR);
 
         /// <summary>
         /// Encrypts a string with AES
