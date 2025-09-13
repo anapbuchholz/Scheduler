@@ -7,15 +7,15 @@ using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase;
 using Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Scheduler.UnitTests.Api.Controllers
 {
     [TestClass]
-    public sealed class CompaniesControllerTests
+    public sealed class CompaniesControllerTests : ControllerUnitTestBase
     {
         private readonly Mock<IUseCase<RegisterCompanyRequest, Response>> _registerCompanyUseCaseMock;
         private readonly Mock<IUseCase<GetCompanyRequest, Response>> _getCompanyUseCaseMock;
@@ -54,23 +54,19 @@ namespace Scheduler.UnitTests.Api.Controllers
 
             //Act
             var result = await _controller.ListCompaniesAsync(requestMock.Name, requestMock.DocumentNumber);
-            
+
             //Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var resultValue = result as OkObjectResult;
             Assert.IsNotNull(resultValue);
 
-            var value = resultValue.Value;
-            var bodyProperty = value.GetType().GetProperty("Body");
-            var responseBody = bodyProperty?.GetValue(value) as List<CompanyEntity>;
-            CollectionAssert.AreEqual(responseBodyMock, responseBody);
+            AssertHttpResponse(resultValue, HttpStatusCode.OK, responseBodyMock);
 
             _listCompanyUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<ListCompaniesRequest>(
-                r => r.DocumentNumber == requestMock.DocumentNumber 
-                && r.Name == requestMock.Name))
-            , Times.Once);
-        }        
+                r => r.DocumentNumber == requestMock.DocumentNumber
+                && r.Name == requestMock.Name)), Times.Once);
+        }
 
-        #endregion        
+        #endregion
     }
 }
