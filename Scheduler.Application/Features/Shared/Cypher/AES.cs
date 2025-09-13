@@ -10,9 +10,11 @@ namespace Scheduler.Application.Features.Shared.Cypher
     {
         private static readonly string _SALT = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_SALT");
         private static readonly string _INITVECTOR = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_INITVECTOR");
+        private static readonly int MAX_PLAIN_TEXT_LENGTH = 16;
 
         private static readonly byte[] _saltBytes = _saltBytes = Encoding.UTF8.GetBytes(_SALT);
         private static readonly byte[] _initVectorBytes = _initVectorBytes = Encoding.UTF8.GetBytes(_INITVECTOR);
+
 
         /// <summary>
         /// Encrypts a string with AES
@@ -24,7 +26,24 @@ namespace Scheduler.Application.Features.Shared.Cypher
         /// <returns>An encrypted string</returns>        
         public static string Encrypt(string plainText, string password, string salt = null, string initialVector = null)
         {
+            if(plainText.Length > MAX_PLAIN_TEXT_LENGTH)
+                throw new ArgumentException("The plain text must not exceed 32 characters in length.", nameof(plainText));
+
             return Convert.ToBase64String(EncryptToBytes(plainText, password, salt, initialVector));
+        }
+
+        /// <summary>  
+        /// Decrypts an AES-encrypted string. 
+        /// </summary>  
+        /// <param name="cipherText">Text to be decrypted</param> 
+        /// <param name="password">Password to decrypt with</param> 
+        /// <param name="salt">Salt to decrypt with</param> 
+        /// <param name="initialVector">Needs to be 16 ASCII characters long</param> 
+        /// <returns>A decrypted string</returns>
+        public static string Decrypt(string cipherText, string password, string salt = null, string initialVector = null)
+        {
+            byte[] cipherTextBytes = Convert.FromBase64String(cipherText.Replace(' ', '+'));
+            return Decrypt(cipherTextBytes, password, salt, initialVector).TrimEnd('\0');
         }
 
         /// <summary>
@@ -35,7 +54,7 @@ namespace Scheduler.Application.Features.Shared.Cypher
         /// <param name="salt">Salt to encrypt with</param>    
         /// <param name="initialVector">Needs to be 16 ASCII characters long</param>    
         /// <returns>An encrypted string</returns>        
-        public static byte[] EncryptToBytes(string plainText, string password, string salt = null, string initialVector = null)
+        private static byte[] EncryptToBytes(string plainText, string password, string salt = null, string initialVector = null)
         {
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return EncryptToBytes(plainTextBytes, password, salt, initialVector);
@@ -49,7 +68,7 @@ namespace Scheduler.Application.Features.Shared.Cypher
         /// <param name="salt">Salt to encrypt with</param>    
         /// <param name="initialVector">Needs to be 16 ASCII characters long</param>    
         /// <returns>An encrypted string</returns>        
-        public static byte[] EncryptToBytes(byte[] plainTextBytes, string password, string salt = null, string initialVector = null)
+        private static byte[] EncryptToBytes(byte[] plainTextBytes, string password, string salt = null, string initialVector = null)
         {
             int keySize = 256;
 
@@ -85,21 +104,7 @@ namespace Scheduler.Application.Features.Shared.Cypher
         /// <param name="salt">Salt to decrypt with</param> 
         /// <param name="initialVector">Needs to be 16 ASCII characters long</param> 
         /// <returns>A decrypted string</returns>
-        public static string Decrypt(string cipherText, string password, string salt = null, string initialVector = null)
-        {
-            byte[] cipherTextBytes = Convert.FromBase64String(cipherText.Replace(' ', '+'));
-            return Decrypt(cipherTextBytes, password, salt, initialVector).TrimEnd('\0');
-        }
-
-        /// <summary>  
-        /// Decrypts an AES-encrypted string. 
-        /// </summary>  
-        /// <param name="cipherText">Text to be decrypted</param> 
-        /// <param name="password">Password to decrypt with</param> 
-        /// <param name="salt">Salt to decrypt with</param> 
-        /// <param name="initialVector">Needs to be 16 ASCII characters long</param> 
-        /// <returns>A decrypted string</returns>
-        public static string Decrypt(byte[] cipherTextBytes, string password, string salt = null, string initialVector = null)
+        private static string Decrypt(byte[] cipherTextBytes, string password, string salt = null, string initialVector = null)
         {
             int keySize = 256;
 

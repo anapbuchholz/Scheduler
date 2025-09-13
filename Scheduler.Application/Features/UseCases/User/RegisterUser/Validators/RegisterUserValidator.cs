@@ -10,7 +10,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
     {
         private readonly int _nameMaxLength = 255;
         private readonly int _passwordMinLength = 6;
-        private readonly int _passwordMaxLength = 20;
+        private readonly int _passwordMaxLength = 16;
 
         public Task<RequestValidationModel> ValidateAsync(RegisterUserRequest request)
         {
