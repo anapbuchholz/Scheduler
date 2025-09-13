@@ -8,6 +8,7 @@ using Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase;
 using Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace Scheduler.UnitTests.Api.Controllers
         #region ListCompaniesAsync
 
         [TestMethod]
-        public async Task ListCompaniesAsync_WhenCalled_ShouldReturnListOfCom()
+        public async Task ListCompaniesAsync_WhenCalled_ShouldReturnCompanyEntities()
         {
             //Arrange
             var requestMock = _fixture.Create<ListCompaniesRequest>();
@@ -65,6 +66,69 @@ namespace Scheduler.UnitTests.Api.Controllers
             _listCompanyUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<ListCompaniesRequest>(
                 r => r.DocumentNumber == requestMock.DocumentNumber
                 && r.Name == requestMock.Name)), Times.Once);
+        }
+
+        #endregion
+
+        #region GetCompanyAsync
+
+        [TestMethod]
+        public async Task GetCompanyAsync_WhenCalled_ShouldReturnCompanyEntity()
+        {
+            // Arrange
+            var idMock = _fixture.Create<Guid>();
+            var responseBodyMock = _fixture.Create<CompanyEntity>();
+            var responseMock = Response.CreateOkResponse(responseBodyMock);
+
+            _getCompanyUseCaseMock
+                .Setup(x => x.ExecuteAsync(It.IsAny<GetCompanyRequest>()))
+                .ReturnsAsync(responseMock);
+
+            // Act
+            var result = await _controller.GetCompanyAsync(idMock);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var resultValue = result as OkObjectResult;
+            Assert.IsNotNull(resultValue);
+
+            AssertHttpResponse(resultValue, HttpStatusCode.OK, responseBodyMock);
+
+            _getCompanyUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<GetCompanyRequest>(
+                r => r.Id == idMock)), Times.Once);
+        }
+
+        #endregion
+
+        #region RegisterCompanyAsync
+
+        [TestMethod]
+        public async Task RegisterCompanyAsync_WhenCalled_ShouldReturnCreatedCompanyEntity()
+        {
+            // Arrange
+            var requestMock = _fixture.Create<RegisterCompanyRequest>();
+            var responseMock = Response.CreateCreatedResponse();
+
+            _registerCompanyUseCaseMock
+                .Setup(x => x.ExecuteAsync(It.IsAny<RegisterCompanyRequest>()))
+                .ReturnsAsync(responseMock);
+
+            // Act
+            var result = await _controller.RegisterCompanyAsync(requestMock);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(CreatedResult));
+            var resultValue = result as CreatedResult;
+            Assert.IsNotNull(resultValue);
+
+            AssertHttpResponse(resultValue, HttpStatusCode.Created);
+
+            _registerCompanyUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<RegisterCompanyRequest>(
+                r => r.TradeName == requestMock.TradeName
+                  && r.LegalName == requestMock.LegalName
+                  && r.DocumentNumber == requestMock.DocumentNumber
+                  && r.Email == requestMock.Email
+                  && r.PhoneNumber == requestMock.PhoneNumber)), Times.Once);
         }
 
         #endregion

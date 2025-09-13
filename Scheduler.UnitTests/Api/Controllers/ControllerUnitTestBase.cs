@@ -16,5 +16,11 @@ namespace Scheduler.UnitTests.Api.Controllers
             Assert.AreEqual(expectedStatusCode, currentCode);
             Assert.AreEqual(expectedBody, currentBody);
         }
+
+        protected static void AssertHttpResponse(ObjectResult currentResponse, HttpStatusCode expectedStatusCode)
+        {
+            var currentCode = (HttpStatusCode)currentResponse.StatusCode!;
+            Assert.AreEqual(expectedStatusCode, currentCode);
+        }
     }
 }
