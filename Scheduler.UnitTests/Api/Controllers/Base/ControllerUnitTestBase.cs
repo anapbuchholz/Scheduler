@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Scheduler.UnitTests.Api.Controllers
+namespace Scheduler.UnitTests.Api.Controllers.Base
 {
     public abstract class ControllerUnitTestBase
     {

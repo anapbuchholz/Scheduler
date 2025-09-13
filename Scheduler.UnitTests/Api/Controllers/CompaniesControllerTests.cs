@@ -8,6 +8,7 @@ using Scheduler.Application.Features.UseCases.Company.GetCompany.UseCase;
 using Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase;
 using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using Scheduler.UnitTests.Api.Controllers.Base;
 using System;
 using System.Linq;
 using System.Net;

@@ -2,7 +2,7 @@
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared.IO;
 
-namespace Scheduler.UnitTests.Api.Controllers.Base
+namespace Scheduler.UnitTests.Api.Controllers.BaseTests
 {
     internal sealed class ControllerMock : BaseController
     {

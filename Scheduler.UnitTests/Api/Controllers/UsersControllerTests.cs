@@ -6,6 +6,7 @@ using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
+using Scheduler.UnitTests.Api.Controllers.Base;
 using System;
 using System.Net;
 using System.Threading.Tasks;

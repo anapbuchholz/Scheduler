@@ -3,7 +3,7 @@ using Scheduler.Application.Features.Shared.IO;
 using System;
 using System.Net;
 
-namespace Scheduler.UnitTests.Api.Controllers.Base
+namespace Scheduler.UnitTests.Api.Controllers.BaseTests
 {
     [TestClass]
     public sealed class BaseControllerTests
