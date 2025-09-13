@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Scheduler.Application\Scheduler.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="..\Scheduler.UnitTests\Scheduler.UnitTests.csproj"/>
-  </ItemGroup>
-
 </Project>

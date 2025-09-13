@@ -10,6 +10,7 @@ using Scheduler.Application.Features.UseCases.Company.RegisterCompany.UseCase;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 
 namespace Scheduler.UnitTests.Api.Controllers
 {
@@ -40,11 +41,11 @@ namespace Scheduler.UnitTests.Api.Controllers
         #region ListCompaniesAsync
 
         [TestMethod]
-        public async Task ListCompaniesAsync_WhenCalled_ShouldReturnUseCaseResultHttpStatusCode()
+        public async Task ListCompaniesAsync_WhenCalled_ShouldReturnListOfCom()
         {
             //Arrange
             var requestMock = _fixture.Create<ListCompaniesRequest>();
-            var responseBodyMock = _fixture.CreateMany<string>(3).ToList();
+            var responseBodyMock = _fixture.CreateMany<CompanyEntity>(3).ToList();
             var responseMock = Response.CreateOkResponse(responseBodyMock);
 
             _listCompanyUseCaseMock
@@ -61,7 +62,7 @@ namespace Scheduler.UnitTests.Api.Controllers
 
             var value = resultValue.Value;
             var bodyProperty = value.GetType().GetProperty("Body");
-            var responseBody = bodyProperty?.GetValue(value) as List<string>;
+            var responseBody = bodyProperty?.GetValue(value) as List<CompanyEntity>;
             CollectionAssert.AreEqual(responseBodyMock, responseBody);
 
             _listCompanyUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<ListCompaniesRequest>(
