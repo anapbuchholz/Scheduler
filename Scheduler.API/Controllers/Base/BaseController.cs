@@ -9,6 +9,10 @@ namespace Scheduler.API.Controllers.Base
     {
         protected IActionResult GetHttpResponse(Response response, in string? uri = null)
         {
+            if(response == null)
+            {
+                response = Application.Features.Shared.IO.Response.CreateInternalErrorResponse("Response é null");
+            }
             var httpResponse = new { response.StatusCode, response.ValidationErrorMessage, response.Body };
 
             return response.StatusCode switch
