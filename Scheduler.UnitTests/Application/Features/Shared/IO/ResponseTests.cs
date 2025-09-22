@@ -1,7 +1,7 @@
 ﻿using Scheduler.Application.Features.Shared.IO;
 using System.Net;
 
-namespace Scheduler.UnitTests.Application.Features.IO
+namespace Scheduler.UnitTests.Application.Features.Shared.IO
 {
     [TestClass]
     public class ResponseTests

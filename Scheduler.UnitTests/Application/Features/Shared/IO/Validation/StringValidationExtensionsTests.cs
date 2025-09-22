@@ -1,6 +1,6 @@
 ﻿using Scheduler.Application.Features.Shared.IO.Validation;
 
-namespace Scheduler.UnitTests.Application.Features.IO.Validation
+namespace Scheduler.UnitTests.Application.Features.Shared.IO.Validation
 {
     [TestClass]
     public class StringValidationExtensionsTests
