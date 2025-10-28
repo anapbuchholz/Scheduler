@@ -7,9 +7,11 @@ using Scheduler.Application.Infrastructure.Authentication.Attributes;
 using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
 using Scheduler.Application.Infrastructure.Configuration;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Authentication
 {
+    [ExcludeFromCodeCoverage]
     internal static class AuthenticationExtensions
     {
         public static IServiceCollection AddFireBaseAuthentication(this IServiceCollection services)
