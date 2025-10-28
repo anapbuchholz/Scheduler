@@ -1,7 +1,7 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
-using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Interfaces;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Features.UseCases.User.Login.UseCase

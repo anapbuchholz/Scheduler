@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Scheduler.Application.Infrastructure.Authentication.Attributes;
-using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Implementations;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Interfaces;
 using Scheduler.Application.Infrastructure.Configuration;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -41,6 +42,8 @@ namespace Scheduler.Application.Infrastructure.Authentication
             {
                 Credential = GoogleCredential.FromJsonParameters(credentials)
             }));
+
+            services.AddSingleton<IFireBaseAdminProxy, FireBaseAdminProxy>();
         }
 
         private static void AddFireBaseRestApiService(IServiceCollection services)

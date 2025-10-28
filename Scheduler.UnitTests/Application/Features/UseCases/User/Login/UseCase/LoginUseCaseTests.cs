@@ -2,7 +2,7 @@
 using Moq;
 using Scheduler.Application.Features.Shared.IO.Validation;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
-using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;

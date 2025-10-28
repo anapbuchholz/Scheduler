@@ -2,7 +2,7 @@
 using Moq;
 using Scheduler.Application.Features.Shared.IO.Validation;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
-using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Interfaces;
 using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;

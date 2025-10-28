@@ -2,7 +2,7 @@
 using Scheduler.Application.Features.Shared.Cypher;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.Shared.IO.Validation;
-using Scheduler.Application.Infrastructure.Authentication.Services.FireBase;
+using Scheduler.Application.Infrastructure.Authentication.Services.FireBase.Interfaces;
 using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Configuration;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
