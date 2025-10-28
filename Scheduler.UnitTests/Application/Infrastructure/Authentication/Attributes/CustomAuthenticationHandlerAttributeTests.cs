@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Scheduler.Application.Infrastructure.Authentication.Attributes;
 using Scheduler.Application.Infrastructure.Authorization.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Claims;
