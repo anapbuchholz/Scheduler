@@ -65,7 +65,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
                 }
 
-                var AesKey = EnrionmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
+                var AesKey = EnvironmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
                 var passwordHash = AES.Encrypt(request.Password!, AesKey);
                 var userEntity = new UserEntity
                 {

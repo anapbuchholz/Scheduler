@@ -24,7 +24,7 @@ namespace Scheduler.API.Controllers.Base
                 HttpStatusCode.NotFound => NotFound(httpResponse),
                 HttpStatusCode.OK => Ok(httpResponse),
                 HttpStatusCode.Created => Created(uri!, httpResponse),
-                HttpStatusCode.InternalServerError => StatusCode(500, EnrionmentVariableHandler.IsDevelopment() ? response.ValidationErrorMessage : "Ocorreu um erro inesperado"),
+                HttpStatusCode.InternalServerError => StatusCode(500, EnvironmentVariableHandler.IsDevelopment() ? response.ValidationErrorMessage : "Ocorreu um erro inesperado"),
                 _ => NoContent()
             };
         }

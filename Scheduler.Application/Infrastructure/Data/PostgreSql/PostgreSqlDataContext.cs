@@ -12,7 +12,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql
 
         public PostgreSqlDataContext()
         {
-            _connectionString = EnrionmentVariableHandler.GetEnvironmentVariable(CONNECTION_STRING_VARIABLE_NAME);
+            _connectionString = EnvironmentVariableHandler.GetEnvironmentVariable(CONNECTION_STRING_VARIABLE_NAME);
         }
 
         public IDbConnection GetConnection() => new NpgsqlConnection(_connectionString);

@@ -25,14 +25,14 @@ namespace Scheduler.Application.Infrastructure.Authentication
         {
             var credentials = new JsonCredentialParameters
             {
-                Type = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_TYPE"),
-                ProjectId = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PROJECT_ID"),
-                PrivateKeyId = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PRIVATE_KEY_ID"),
-                PrivateKey = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PRIVATE_KEY"),
-                ClientEmail = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_CLIENT_EMAIL"),
-                ClientId = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_CLIENT_ID"),
-                TokenUri = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_TOKEN_URI"),
-                UniverseDomain = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_UNIVERSE_DOMAIN")
+                Type = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_TYPE"),
+                ProjectId = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PROJECT_ID"),
+                PrivateKeyId = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PRIVATE_KEY_ID"),
+                PrivateKey = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_PRIVATE_KEY"),
+                ClientEmail = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_CLIENT_EMAIL"),
+                ClientId = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_CLIENT_ID"),
+                TokenUri = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_TOKEN_URI"),
+                UniverseDomain = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_ACCOUNT_UNIVERSE_DOMAIN")
             };
 
             services.AddSingleton(FirebaseApp.Create(new AppOptions()
@@ -43,8 +43,8 @@ namespace Scheduler.Application.Infrastructure.Authentication
 
         private static void AddFireBaseRestApiService(IServiceCollection services)
         {
-            var apiKey = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_KEY");
-            var firebaseBasePath = EnrionmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_BASE_PATH");
+            var apiKey = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_KEY");
+            var firebaseBasePath = EnvironmentVariableHandler.GetEnvironmentVariable("FIREBASE_API_BASE_PATH");
             var fireBaseAuthUri = $"{firebaseBasePath}{apiKey}";
             services.AddHttpClient<IFireBaseAuthenticationService, FireBaseAuthenticationService>(client =>
             {

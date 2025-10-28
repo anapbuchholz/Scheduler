@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Scheduler.UnitTests.Application.Infrastructure.Data.Services
+namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
 {
     [TestClass]
     public class SqlServiceTests
@@ -51,7 +51,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Services
             await conn.ExecuteAsync("CREATE TABLE Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, IsActive INTEGER);");
             for (int i = 1; i <= rows; i++)
             {
-                var isActive = setAllIsActiveTo == null ? (i % 2 == 0 ? 1 : 0) : (setAllIsActiveTo == true ? 1 : 0);
+                var isActive = setAllIsActiveTo == null ? i % 2 == 0 ? 1 : 0 : setAllIsActiveTo == true ? 1 : 0;
                 await conn.ExecuteAsync("INSERT INTO Items (Name, IsActive) VALUES (@Name, @IsActive);", new { Name = $"Item{i}", IsActive = isActive });
             }
         }
@@ -129,7 +129,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Services
             // criação da tabela pelo keeper
             await keeper.ExecuteAsync("CREATE TABLE Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT);");
 
-            var commands = new Dictionary<string, object?>()
+            var commands = new Dictionary<string, object>()
             {
                 { "INSERT INTO Items (Name) VALUES (@Name1);", new { Name1 = "A" } },
                 { "INSERT INTO Items (Name) VALUES (@Name2);", new { Name2 = "B" } }
@@ -154,7 +154,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Services
             await keeper.ExecuteAsync("CREATE TABLE Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT);");
             await keeper.ExecuteAsync("INSERT INTO Items (Name) VALUES (@Name);", new { Name = "Initial" });
 
-            var commands = new Dictionary<string, object?>()
+            var commands = new Dictionary<string, object>()
             {
                 { "UPDATE Items SET Name = @Name WHERE Id = 1;", new { Name = "Updated" } },
                 { "UPDATE Items SET Name = @Name WHERE Id = -1;", new { Name = "NoOne" } }
@@ -178,7 +178,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Services
 
             await keeper.ExecuteAsync("CREATE TABLE Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT);");
 
-            var commands = new Dictionary<string, object?>()
+            var commands = new Dictionary<string, object>()
             {
                 { "INSERT INTO Items (Name) VALUES (@Name);", new { Name = "OK" } },
                 { "INSERT INTO NonExisting (Col) VALUES (1);", null }

@@ -8,8 +8,8 @@ namespace Scheduler.Application.Features.Shared.Cypher
 {
     internal static class AES
     {
-        private static readonly string _SALT = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_SALT");
-        private static readonly string _INITVECTOR = EnrionmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_INITVECTOR");
+        private static readonly string _SALT = EnvironmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_SALT");
+        private static readonly string _INITVECTOR = EnvironmentVariableHandler.GetEnvironmentVariable("CYPHER_AES_INITVECTOR");
         private static readonly int MAX_PLAIN_TEXT_LENGTH = 16;
 
         private static readonly byte[] _saltBytes = _saltBytes = Encoding.UTF8.GetBytes(_SALT);

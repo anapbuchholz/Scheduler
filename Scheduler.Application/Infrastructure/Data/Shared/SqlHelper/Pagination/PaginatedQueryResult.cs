@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Pagination
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class PaginatedQueryResult<T> where T : class
     {
         public int TotalCount { get; }
