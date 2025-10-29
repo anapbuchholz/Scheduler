@@ -11,15 +11,15 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
+namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Helpers.Sql
 {
     [TestClass]
-    public class SqlServiceTests
+    public class SqlHelperTests
     {
         private readonly Mock<IDataContext> _dataContextMock;
         private readonly SqlHelper _service;
 
-        public SqlServiceTests()
+        public SqlHelperTests()
         {
             _dataContextMock = new Mock<IDataContext>();
 

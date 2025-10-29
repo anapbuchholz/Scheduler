@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
+namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Helpers.Sql
 {
     internal sealed class GuidTypeHandlerForTests : SqlMapper.TypeHandler<Guid>
     {
