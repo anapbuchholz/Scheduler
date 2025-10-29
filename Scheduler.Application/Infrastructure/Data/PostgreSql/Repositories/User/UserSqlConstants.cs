@@ -1,5 +1,8 @@
-﻿namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
 {
+    [ExcludeFromCodeCoverage]
     internal static class UserSqlConstants
     {
         public static string INSERT_USER = @"INSERT INTO scheduler.users 
