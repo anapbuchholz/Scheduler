@@ -49,6 +49,12 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                     return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse email.");
                 }
 
+                existingUser = await _userRepository.GetUserByDocumentNumberAsync(request.DocumentNumber!);
+                if (existingUser != null)
+                {
+                    return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse número de documento.");
+                }
+
                 if (!request.IsAdmin)
                 {
                     var usersCompany = await _companyRepository.GetCompanyAsync(request.CompanyId!.Value);

@@ -217,8 +217,34 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             var response = await _useCase.ExecuteAsync(request);
 
             Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
-            Assert.IsTrue(response.ValidationErrorMessage.Contains("RegisterUserUseCase->ExecuteAsync"));
-            Assert.IsTrue(response.ValidationErrorMessage.Contains("DB error"));
+            Assert.Contains("RegisterUserUseCase->ExecuteAsync", response.ValidationErrorMessage);
+            Assert.Contains("DB error", response.ValidationErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task ExecuteAsync_WhenDocumentNumberAlreadyExists_ReturnsConflict()
+        {
+            //Arrange
+            _userSessionMock.Setup(x => x.IsAdmin).Returns(true);
+            var request = _fixture.Create<RegisterUserRequest>();
+            var validationModel = new RequestValidationModel([]);
+
+            _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
+
+            _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(request.Email!)).ReturnsAsync((UserEntity)null);
+
+            var existingUserByDocument = _fixture.Create<UserEntity>();
+            _userRepositoryMock.Setup(x => x.GetUserByDocumentNumberAsync(request.DocumentNumber!)).ReturnsAsync(existingUserByDocument);
+
+            //Act
+            var response = await _useCase.ExecuteAsync(request);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.AreEqual("Já existe um usuário cadastrado com esse número de documento.", response.ValidationErrorMessage);
+            Assert.IsNull(response.Body);
+            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _userRepositoryMock.Verify(x => x.RegisterUserAsync(It.IsAny<UserEntity>()), Times.Never);
         }
     }
 }
