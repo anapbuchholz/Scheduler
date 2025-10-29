@@ -1,8 +1,10 @@
 ﻿using Scheduler.Application.Infrastructure.Data.Shared.Entity;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class UserEntity : BaseEntity
     {
         public string Name { get; set; } = "INVALID REGISTER";

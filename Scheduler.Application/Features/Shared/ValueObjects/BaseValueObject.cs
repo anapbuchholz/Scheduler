@@ -15,6 +15,6 @@ namespace Scheduler.Application.Features.Shared.ValueObjects
 
         public bool IsGreaterThanMaxLength { get { return Value != null && Value.IsGreaterThanLimit(MaxLength); } }
 
-        public bool IsLessThanMinLength { get { return Value != null && Value.IsLessThanLimit(MinLength); } }
+        public bool IsLessThanMinLength { get { return Value == null || Value.IsLessThanLimit(MinLength); } }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Infrastructure.Configuration
 {
-    public static class EnrionmentVariableHandler
+    public static class EnvironmentVariableHandler
     {
         private const string VARIABLE_NOT_SET_MESSAGE = "Missing Environment variable:";
         private const string ASPNETCORE_ENVIRONMENT_VARIABLE_NAME = "ASPNETCORE_ENVIRONMENT";

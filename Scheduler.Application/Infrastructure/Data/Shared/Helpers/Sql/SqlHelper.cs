@@ -1,13 +1,14 @@
 ﻿using Dapper;
 using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
-using Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Pagination;
+using Scheduler.Application.Infrastructure.Data.Shared.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services
+namespace Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql
 {
-    internal sealed class SqlService(IDataContext context) : ISqlService
+    internal sealed class SqlHelper(IDataContext context) : ISqlHelper
     {
         private readonly IDataContext _context = context;
 
@@ -23,16 +24,16 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services
             return await connection.ExecuteAsync(sql, param);
         }
 
-        public async Task<IEnumerable<T>> SelectAsync<T>(string sql, object? param = default)
+        public async Task<IEnumerable<T>> SelectAsync<T>(string sql, object? param = default) where T : BaseEntity
         {
             using var connection = _context.GetConnection();
             return await connection.QueryAsync<T>(sql, param);
         }
 
-        public async Task<T> SelectSingleAsync<T>(string sql, object? param = default)
+        public async Task<T?> SelectFirstOrDefaultAsync<T>(string sql, object? param = default) where T : BaseEntity
         {
             using var connection = _context.GetConnection();
-            return await connection.QuerySingleAsync<T>(sql, param);
+            return await connection.QueryFirstOrDefaultAsync<T>(sql, param);
         }
 
         public async Task<(bool Success, int RowsAffected)> ExecuteWithTransactionAsync(IDictionary<string, object?> commands)
@@ -65,7 +66,13 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services
             return (true, totalRowsAffected);
         }
 
-        public async Task<PaginatedQueryResult<T>> SelectPaginated<T>(QueryRequest queryRequest, string selectStatement, string fromAndJoinsStatements, string whereStatement = "", bool independentWhereStatement = false) where T : class
+        public async Task<PaginatedQueryResult<T>> SelectPaginated<T>(
+            QueryRequest queryRequest,
+            string selectStatement,
+            string fromAndJoinsStatements,
+            string whereStatement = "",
+            bool independentWhereStatement = false
+        ) where T : BaseEntity
         {
             selectStatement += " {0} {1} {2}";
             if (queryRequest.SearchParam == null && !independentWhereStatement)

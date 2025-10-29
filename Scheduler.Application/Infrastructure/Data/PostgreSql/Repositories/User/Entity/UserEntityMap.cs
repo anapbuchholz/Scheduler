@@ -1,7 +1,9 @@
 ﻿using Dapper.FluentMap.Mapping;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity
 {
+    [ExcludeFromCodeCoverage]
     internal class UserEntityMap : EntityMap<UserEntity>
     {
         public UserEntityMap() 

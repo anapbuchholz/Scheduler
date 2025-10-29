@@ -1,5 +1,8 @@
-﻿namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company
 {
+    [ExcludeFromCodeCoverage]
     internal static class CompanySqlConstants
     {
         public static string SELECT_COMPANY_BY_ID = @"SELECT

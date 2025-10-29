@@ -92,14 +92,14 @@ namespace Scheduler.Application.Features.Shared.IO.Validation
             return (cnpj[12] - '0' == firstCheckDigit) && (cnpj[13] - '0' == secondCheckDigit);
         }
 
-        public static bool IsGreaterThanLimit(this string str, int length)
+        public static bool IsGreaterThanLimit(this string str, int maxLength)
         {
-            return str.Length > length;
+            return str.Length > maxLength;
         }
 
-        public static bool IsLessThanLimit(this string str, int length)
+        public static bool IsLessThanLimit(this string str, int minLength)
         {
-            return str.Length < length;
+            return str.Length < minLength;
         }
     }
 }

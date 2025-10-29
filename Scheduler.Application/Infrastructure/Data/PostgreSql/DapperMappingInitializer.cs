@@ -1,8 +1,10 @@
 ﻿using Dapper.FluentMap;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql
 {
+    [ExcludeFromCodeCoverage]
     public class DapperMappingInitializer
     {
         private static bool _isInitialized = false;

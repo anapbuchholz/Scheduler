@@ -9,6 +9,10 @@ namespace Scheduler.API.Controllers.Base
     {
         protected IActionResult GetHttpResponse(Response response, in string? uri = null)
         {
+            if(response == null)
+            {
+                response = Application.Features.Shared.IO.Response.CreateInternalErrorResponse("Response é null");
+            }
             var httpResponse = new { response.StatusCode, response.ValidationErrorMessage, response.Body };
 
             return response.StatusCode switch
@@ -20,7 +24,7 @@ namespace Scheduler.API.Controllers.Base
                 HttpStatusCode.NotFound => NotFound(httpResponse),
                 HttpStatusCode.OK => Ok(httpResponse),
                 HttpStatusCode.Created => Created(uri!, httpResponse),
-                HttpStatusCode.InternalServerError => StatusCode(500, EnrionmentVariableHandler.IsDevelopment() ? response.ValidationErrorMessage : "Ocorreu um erro inesperado"),
+                HttpStatusCode.InternalServerError => StatusCode(500, EnvironmentVariableHandler.IsDevelopment() ? response.ValidationErrorMessage : "Ocorreu um erro inesperado"),
                 _ => NoContent()
             };
         }

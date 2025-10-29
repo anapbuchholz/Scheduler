@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Scheduler.Application.Infrastructure.Authentication.Services.Models
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class AuthenticationResponse
     {
         [JsonPropertyName("kind")]
