@@ -8,6 +8,12 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
     {
         private readonly ISqlHelper _sqlHelper = sqlhelper;
 
+        public async Task<UserEntity?> GetUserByDocumentNumberAsync(string documentNumber)
+        {
+            var query = UserSqlConstants.SELECT_USER_BY_DOCUMENT_NUMBER;
+            return await _sqlHelper.SelectFirstOrDefaultAsync<UserEntity>(query, new { DocumentNumber = documentNumber });
+        }
+
         public async Task<UserEntity?> GetUserByEmailAsync(string email)
         {
             var query = UserSqlConstants.SELECT_USER_BY_EMAIL;

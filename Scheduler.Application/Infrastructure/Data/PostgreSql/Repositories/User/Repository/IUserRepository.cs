@@ -10,5 +10,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
         Task RegisterUserAsync(UserEntity user);
 
         Task<UserEntity?> GetUserByEmailAsync(string email);
+
+        Task<UserEntity?> GetUserByDocumentNumberAsync(string documentNumber);
     }
 }
