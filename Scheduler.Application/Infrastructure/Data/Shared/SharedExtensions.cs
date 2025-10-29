@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Infrastructure.Data.Shared
@@ -9,7 +9,7 @@ namespace Scheduler.Application.Infrastructure.Data.Shared
     {
         public static IServiceCollection AddShared(this IServiceCollection services)
         {
-            services.AddScoped<ISqlService, SqlService>();
+            services.AddScoped<ISqlHelper, SqlHelper>();
             return services;
         }
     }

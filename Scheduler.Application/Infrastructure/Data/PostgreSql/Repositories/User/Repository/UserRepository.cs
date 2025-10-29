@@ -1,28 +1,23 @@
-﻿using Dapper;
-using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
-using Scheduler.Application.Infrastructure.Data.Shared.Context;
+﻿using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository
 {
-    internal sealed class UserRepository(IDataContext context) : IUserRepository
+    internal sealed class UserRepository(ISqlHelper sqlhelper) : IUserRepository
     {
-        private readonly IDataContext _context = context;
+        private readonly ISqlHelper _sqlHelper = sqlhelper;
 
         public async Task<UserEntity?> GetUserByEmailAsync(string email)
         {
             var query = UserSqlConstants.SELECT_USER_BY_EMAIL;
-
-            var connection = _context.GetConnection();
-            return await connection.QueryFirstOrDefaultAsync<UserEntity>(query, new { Email = email });
+            return await _sqlHelper.SelectFirstOrDefaultAsync<UserEntity>(query, new { Email = email });
         }
 
         public async Task RegisterUserAsync(UserEntity user)
         {
             var command = UserSqlConstants.INSERT_USER;
-
-            var connection = _context.GetConnection();
-            await connection.ExecuteAsync(command, user);
+            await _sqlHelper.ExecuteAsync(command, user);
         }
     }
 }

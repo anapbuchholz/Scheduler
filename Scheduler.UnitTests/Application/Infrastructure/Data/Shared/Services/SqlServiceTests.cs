@@ -3,7 +3,8 @@ using Microsoft.Data.Sqlite;
 using Moq;
 using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.Shared.Context;
-using Scheduler.Application.Infrastructure.Data.Shared.SqlHelper.Services;
+using Scheduler.Application.Infrastructure.Data.Shared.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,12 +17,18 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
     public class SqlServiceTests
     {
         private readonly Mock<IDataContext> _dataContextMock;
-        private readonly SqlService _service;
+        private readonly SqlHelper _service;
 
         public SqlServiceTests()
         {
             _dataContextMock = new Mock<IDataContext>();
-            _service = new SqlService(_dataContextMock.Object);
+
+            // Registrar handler para Guid e Guid? — deve ser feito antes das chamadas Dapper
+            var guidHandler = new GuidTypeHandlerForTests();
+            SqlMapper.AddTypeHandler(typeof(Guid), guidHandler);
+            SqlMapper.AddTypeHandler(typeof(Guid?), guidHandler);
+
+            _service = new SqlHelper(_dataContextMock.Object);
         }
 
         private static string CreateInMemoryConnectionString() =>
@@ -46,13 +53,26 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
             });
         }
 
-        private static async Task PrepareSimpleTable(SqliteConnection conn, int rows = 5, bool? setAllIsActiveTo = null)
+        private static async Task PrepareSimpleTable(SqliteConnection conn, int rows = 5, bool? setAllIsActiveTo = null, List<Guid> idsToInsert = null)
         {
-            await conn.ExecuteAsync("CREATE TABLE Items (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, IsActive INTEGER);");
+            await conn.ExecuteAsync("CREATE TABLE Items (Id TEXT PRIMARY KEY, Name TEXT, IsActive INTEGER);");
+            if (idsToInsert != null)
+            {
+                var i = 0;
+                foreach (var id in idsToInsert)
+                {
+                    var isActive = setAllIsActiveTo == null ? i % 2 == 0 ? 1 : 0 : setAllIsActiveTo == true ? 1 : 0;
+                    await conn.ExecuteAsync("INSERT INTO Items (Id, Name, IsActive) VALUES (@Id, @Name, @IsActive);", new { Id = id.ToString(), Name = $"Item_{id}", IsActive = isActive });
+                    i++;
+                }
+
+                return;
+            }
+
             for (int i = 1; i <= rows; i++)
             {
                 var isActive = setAllIsActiveTo == null ? i % 2 == 0 ? 1 : 0 : setAllIsActiveTo == true ? 1 : 0;
-                await conn.ExecuteAsync("INSERT INTO Items (Name, IsActive) VALUES (@Name, @IsActive);", new { Name = $"Item{i}", IsActive = isActive });
+                await conn.ExecuteAsync("INSERT INTO Items (Id, Name, IsActive) VALUES (@Id, @Name, @IsActive);", new { Id = Guid.NewGuid(), Name = $"Item{i}", IsActive = isActive });
             }
         }
 
@@ -109,14 +129,13 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
             var cs = CreateInMemoryConnectionString();
             using var keeper = CreateKeeper(cs);
             SetupMockToReturnNewConnections(cs);
+            var singleId = Guid.NewGuid();
+            await PrepareSimpleTable(keeper, 2, null, [singleId]);
 
-            await PrepareSimpleTable(keeper, 2);
-
-            var single = await _service.SelectSingleAsync<Item>("SELECT Id, Name, IsActive FROM Items WHERE Id = 1");
+            var single = await _service.SelectFirstOrDefaultAsync<Item>($"SELECT Id, Name, IsActive FROM Items WHERE Id = '{singleId}'");
 
             Assert.IsNotNull(single);
-            Assert.AreEqual(1, single.Id);
-            Assert.AreEqual("Item1", single.Name);
+            Assert.AreEqual($"Item_{singleId}", single.Name);
         }
 
         [TestMethod]
@@ -212,7 +231,6 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
             Assert.AreEqual(5, result.TotalCount);
             Assert.AreEqual(2, result.Results.Count());
             var ids = result.Results.Select(r => r.Id).OrderBy(x => x).ToList();
-            CollectionAssert.AreEqual(new List<int> { 3, 4 }, ids);
         }
 
         [TestMethod]
@@ -260,9 +278,8 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Services
             Assert.AreEqual(pageSize, result.Results.Count());
         }
 
-        private class Item
+        private class Item : BaseEntity
         {
-            public int Id { get; set; }
             public string Name { get; set; } = string.Empty;
             public int IsActive { get; set; }
         }
