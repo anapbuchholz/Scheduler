@@ -18,6 +18,6 @@
             SearchParam = searchParam;
         }
 
-        public static PaginationInput Create(in int pageNumber, in int pageSize, in string? searchParam) => new PaginationInput(pageNumber, pageSize, searchParam);
+        public static PaginationInput Create(in int pageNumber, in int pageSize, in string? searchParam) => new(pageNumber, pageSize, searchParam);
     }
 }
