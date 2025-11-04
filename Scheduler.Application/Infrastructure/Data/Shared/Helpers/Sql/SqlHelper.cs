@@ -24,10 +24,11 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql
             return await connection.ExecuteAsync(sql, param);
         }
 
-        public async Task<IEnumerable<T>> SelectAsync<T>(string sql, object? param = default) where T : BaseEntity
+        public async Task<List<T>> SelectAsync<T>(string sql, object? param = default) where T : BaseEntity
         {
             using var connection = _context.GetConnection();
-            return await connection.QueryAsync<T>(sql, param);
+            var result = await connection.QueryAsync<T>(sql, param);
+            return result.AsList();
         }
 
         public async Task<T?> SelectFirstOrDefaultAsync<T>(string sql, object? param = default) where T : BaseEntity
@@ -67,29 +68,30 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql
         }
 
         public async Task<PaginatedQueryResult<T>> SelectPaginated<T>(
-            QueryRequest queryRequest,
+            PaginationInput paginationInput,
             string selectStatement,
             string fromAndJoinsStatements,
             string whereStatement = "",
-            bool independentWhereStatement = false
+            bool independentWhereStatement = false,
+            object? param = default
         ) where T : BaseEntity
         {
             selectStatement += " {0} {1} {2}";
-            if (queryRequest.SearchParam == null && !independentWhereStatement)
+            if (paginationInput.SearchParam == null && !independentWhereStatement)
                 whereStatement = string.Empty;
             else if (!independentWhereStatement)
-                whereStatement = whereStatement.Replace("@search_param", queryRequest.SearchParam);
+                whereStatement = whereStatement.Replace(PaginationInput.SEARCH_PARAM_REPLACE_CONST, paginationInput.SearchParam);
 
             var sqlCount = string.Format("SELECT COUNT(*) {0} {1}", fromAndJoinsStatements, whereStatement);
-            var startRow = queryRequest.PageSize * (queryRequest.PageNumber - 1);
-            var limitStatement = $"LIMIT {startRow}, {queryRequest.PageSize}";
+            var startRow = paginationInput.PageSize * (paginationInput.PageNumber - 1);
+            var limitStatement = $"LIMIT {paginationInput.PageSize} OFFSET {startRow}";
             var sqlQuery = string.Format(selectStatement, fromAndJoinsStatements, whereStatement, limitStatement);
 
             using var connection = _context.GetConnection();
-            var count = await connection.QueryFirstAsync<int>(sqlCount);
-            var data = await connection.QueryAsync<T>(sqlQuery);
+            var count = await connection.QueryFirstAsync<int>(sqlCount, param);
+            var data = await connection.QueryAsync<T>(sqlQuery, param);
 
-            var result = new PaginatedQueryResult<T>(data, count);
+            var result = new PaginatedQueryResult<T>(data.AsList(), count);
             return result;
         }
     }

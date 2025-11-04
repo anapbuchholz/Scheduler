@@ -1,8 +1,11 @@
-﻿using Dapper;
+﻿using AutoFixture;
+using Dapper;
 using Moq;
+using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System;
 using System.Collections.Generic;
@@ -16,11 +19,15 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
     {
         private readonly Mock<ISqlHelper> _sqlHelperMock = null!;
         private readonly CompanyRepository _companyRepository = null!;
+        private readonly Fixture _fixture;
+        private readonly PaginationInput _paginationInput;
 
         public CompanyRepositoryTests()
         {
             _sqlHelperMock = new Mock<ISqlHelper>();
             _companyRepository = new CompanyRepository(_sqlHelperMock.Object);
+            _fixture = new Fixture();
+            _paginationInput = PaginationInput.Create(1, 10, null);
         }
 
         [TestMethod]
@@ -90,24 +97,24 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
         [TestMethod]
         public async Task ListCompaniesAsync_ShouldReturnAll_WhenNoFilters()
         {
-            // Arrange
-            var expectedList = new List<CompanyEntity>
-            {
-                new() { Id = Guid.NewGuid(), TradeName = "Alpha" },
-                new() { Id = Guid.NewGuid(), TradeName = "Beta" }
-            };
+            // Arrange            
+            var expectedResult = _fixture.Create<PaginatedQueryResult<CompanyEntity>>();
 
             _sqlHelperMock
-                .Setup(s => s.SelectAsync<CompanyEntity>(
-                    CompanySqlConstants.LIST_COMPANIES,
+                .Setup(s => s.SelectPaginated<CompanyEntity>(
+                    It.IsAny<PaginationInput>(),                    
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
                     It.IsAny<DynamicParameters>()))
-                .ReturnsAsync(expectedList);
+                .ReturnsAsync(expectedResult);
 
             // Act
-            var result = await _companyRepository.ListCompaniesAsync(null, null);
+            var result = await _companyRepository.ListCompaniesAsync(null, null, _paginationInput);
 
             // Assert
-            Assert.HasCount(expectedList.Count, result);
+            Assert.AreEqual(expectedResult.TotalCount, result.TotalCount);
             _sqlHelperMock.VerifyAll();
         }
 
@@ -116,22 +123,23 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
         {
             // Arrange
             var name = "alpha";
-            var expectedList = new List<CompanyEntity>
-            {
-                new() { Id = Guid.NewGuid(), TradeName = "Alpha Co." }
-            };
+            var expectedResult = _fixture.Create<PaginatedQueryResult<CompanyEntity>>();
 
             _sqlHelperMock
-                .Setup(s => s.SelectAsync<CompanyEntity>(
+                .Setup(s => s.SelectPaginated<CompanyEntity>(
+                    It.IsAny<PaginationInput>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
                     It.Is<string>(q => q.Contains("LOWER(trade_name) LIKE")),
+                    It.IsAny<bool>(),
                     It.Is<DynamicParameters>(p => p.ParameterNames.Contains("Name"))))
-                .ReturnsAsync(expectedList);
+                .ReturnsAsync(expectedResult);
 
             // Act
-            var result = await _companyRepository.ListCompaniesAsync(name, null);
+            var result = await _companyRepository.ListCompaniesAsync(name, null, _paginationInput);
 
             // Assert
-            Assert.HasCount(1, result);
+            Assert.AreEqual(expectedResult.TotalCount, result.TotalCount);
             _sqlHelperMock.VerifyAll();
         }
 
@@ -139,21 +147,24 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
         public async Task ListCompaniesAsync_ShouldFilterByDocumentNumber()
         {
             // Arrange
+            var expectedResult = _fixture.Create<PaginatedQueryResult<CompanyEntity>>();
             var documentNumber = "99887766554433";
-            var expectedList = new List<CompanyEntity> { new() { Id = Guid.NewGuid(), DocumentNumber = documentNumber } };
 
             _sqlHelperMock
-                .Setup(s => s.SelectAsync<CompanyEntity>(
+                .Setup(s => s.SelectPaginated<CompanyEntity>(
+                    It.IsAny<PaginationInput>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
                     It.Is<string>(q => q.Contains("tax_id = @DocumentNumber")),
+                    It.IsAny<bool>(),
                     It.Is<DynamicParameters>(p => p.ParameterNames.Contains("DocumentNumber"))))
-                .ReturnsAsync(expectedList);
+                .ReturnsAsync(expectedResult);
 
             // Act
-            var result = await _companyRepository.ListCompaniesAsync(null, documentNumber);
+            var result = await _companyRepository.ListCompaniesAsync(null, documentNumber, _paginationInput);
 
             // Assert
-            Assert.HasCount(1, result);
-            Assert.AreEqual(documentNumber, result[0].DocumentNumber);
+            Assert.AreEqual(expectedResult.TotalCount, result.TotalCount);
             _sqlHelperMock.VerifyAll();
         }
 

@@ -7,7 +7,7 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination
     internal sealed class PaginatedQueryResult<T> where T : class
     {
         public int TotalCount { get; }
-        public IEnumerable<T> Results { get; }
+        public List<T> Results { get; }
 
         public PaginatedQueryResult()
         {
@@ -15,7 +15,7 @@ namespace Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination
             TotalCount = 0;
         }
 
-        public PaginatedQueryResult(IEnumerable<T> results, int totalCount)
+        public PaginatedQueryResult(List<T> results, int totalCount)
         {
             Results = results;
             TotalCount = totalCount;

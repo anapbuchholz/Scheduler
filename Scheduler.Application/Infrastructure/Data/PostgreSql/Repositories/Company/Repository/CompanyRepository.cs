@@ -1,8 +1,9 @@
 ﻿using Dapper;
+using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository
@@ -23,24 +24,30 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
             return await _sqlHelper.SelectFirstOrDefaultAsync<CompanyEntity>(query, new { DocumentNumber = documentNumber });
         }
 
-        public async Task<List<CompanyEntity>> ListCompaniesAsync(string? name, string? documentNumber)
+        public async Task<PaginatedQueryResult<CompanyEntity>> ListCompaniesAsync(string? name, string? documentNumber, PaginationInput paginationInput)
         {
-            var query = CompanySqlConstants.LIST_COMPANIES;
-            var parameters = new DynamicParameters();
-            
+            var whereClause = CompanySqlConstants.ListCompaniesPaginationConstants.LIST_COMPANIES_WHERE_STATEMENT;
+            var parameters = new DynamicParameters();            
             if (!string.IsNullOrWhiteSpace(name))
             {
-                query += " AND (LOWER(trade_name) LIKE @Name OR LOWER(legal_name) LIKE @Name)";
+                whereClause += " AND (LOWER(trade_name) LIKE @Name OR LOWER(legal_name) LIKE @Name)";
                 parameters.Add("Name", $"%{name.ToLower()}%");
             }
             if (!string.IsNullOrWhiteSpace(documentNumber))
             {
-                query += " AND tax_id = @DocumentNumber";
+                whereClause += " AND tax_id = @DocumentNumber";
                 parameters.Add("DocumentNumber", documentNumber);
             }
             
-            var companyList = await _sqlHelper.SelectAsync<CompanyEntity>(query, parameters);
-            return companyList.AsList();
+            var companyList = await _sqlHelper.SelectPaginated<CompanyEntity>(
+                paginationInput,
+                CompanySqlConstants.ListCompaniesPaginationConstants.LIST_COMPANIES_SELECT_STATEMENT,
+                CompanySqlConstants.ListCompaniesPaginationConstants.LIST_COMPANIES_FROM_STATEMENT,
+                whereClause,
+                true,
+                parameters);
+
+            return companyList;
         }
 
         public async Task RegisterCompanyAsync(CompanyEntity company)

@@ -48,14 +48,14 @@ namespace Scheduler.UnitTests.Api.Controllers
             //Arrange
             var requestMock = _fixture.Create<ListCompaniesRequest>();
             var responseBodyMock = _fixture.CreateMany<CompanyEntity>(3).ToList();
-            var responseMock = Response.CreateOkResponse(responseBodyMock);
+            var responseMock = Response.CreateOkResponse(responseBodyMock);            
 
             _listCompanyUseCaseMock
                 .Setup(x => x.ExecuteAsync(It.IsAny<ListCompaniesRequest>()))
                 .ReturnsAsync(responseMock);
 
             //Act
-            var result = await _controller.ListCompaniesAsync(requestMock.Name, requestMock.DocumentNumber);
+            var result = await _controller.ListCompaniesAsync(requestMock.PaginationParameters.PageNumber, requestMock.PaginationParameters.PageSize, requestMock.Name, requestMock.DocumentNumber);
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

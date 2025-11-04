@@ -24,9 +24,9 @@ namespace Scheduler.API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ListCompaniesAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
+        public async Task<IActionResult> ListCompaniesAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
         {
-            var request = new ListCompaniesRequest(name, documentNumber);
+            var request = new ListCompaniesRequest(name, documentNumber, pageNumber, pageSize);
             var response = await _listCompanyUseCase.ExecuteAsync(request);
             return GetHttpResponse(response);
         }

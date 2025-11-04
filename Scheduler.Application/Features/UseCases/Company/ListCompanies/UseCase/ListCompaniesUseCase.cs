@@ -23,7 +23,7 @@ namespace Scheduler.Application.Features.UseCases.Company.ListCompanies.UseCase
                     return Response.CreateForbiddenResponse();
                 }
 
-                var companies = await _companyRepository.ListCompaniesAsync(input.Name, input.DocumentNumber);
+                var companies = await _companyRepository.ListCompaniesAsync(input.Name, input.DocumentNumber, input.PaginationParameters);
                 return Response.CreateOkResponse(companies);
             }
             catch (Exception ex)

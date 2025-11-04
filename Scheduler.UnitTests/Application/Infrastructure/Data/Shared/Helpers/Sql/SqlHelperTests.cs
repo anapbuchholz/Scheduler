@@ -221,7 +221,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Helpers.Sql
 
             await PrepareSimpleTable(keeper, 5);
 
-            var request = QueryRequest.Create(2, 2, null); // page 2, size 2 -> items 3 and 4
+            var request = PaginationInput.Create(2, 2, null); // page 2, size 2 -> items 3 and 4
             var select = "SELECT Id, Name, IsActive";
             var from = "FROM Items";
             var where = "";
@@ -242,7 +242,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Helpers.Sql
 
             await PrepareSimpleTable(keeper, 5);
 
-            var request = QueryRequest.Create(1, 10, "Item3");
+            var request = PaginationInput.Create(1, 10, "Item3");
             var select = "SELECT Id, Name, IsActive";
             var from = "FROM Items";
             var where = "WHERE Name LIKE '%@search_param%'";
@@ -265,7 +265,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.Shared.Helpers.Sql
 
             await PrepareSimpleTable(keeper, totalRows, true);
 
-            var request = QueryRequest.Create(1, pageSize, null);
+            var request = PaginationInput.Create(1, pageSize, null);
             var select = "SELECT Id, Name, IsActive";
             var from = "FROM Items";
             var where = "WHERE IsActive = 1";

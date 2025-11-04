@@ -36,7 +36,9 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
                                                 AND
                                                     is_active = true";
 
-        public static string LIST_COMPANIES = @"SELECT
+        public static class ListCompaniesPaginationConstants
+        {
+            public static string LIST_COMPANIES_SELECT_STATEMENT = @"SELECT
                                                     id as Id,
                                                     trade_name as TradeName,
                                                     legal_name as LegalName,
@@ -44,11 +46,12 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Comp
                                                     email as Email,
                                                     phone as Phone,
                                                     is_active as IsActive,
-                                                    created_at as CreatedAt
-                                                FROM 
-                                                    scheduler.companies
-                                                WHERE
-                                                    is_active = true";
+                                                    created_at as CreatedAt";
+
+            public static string LIST_COMPANIES_FROM_STATEMENT = "FROM scheduler.companies";
+
+            public static string LIST_COMPANIES_WHERE_STATEMENT = "WHERE is_active = true";
+        }
 
         public static string INSERT_COMPANY = @"INSERT INTO scheduler.companies (id, trade_name, legal_name, tax_id, email, phone, is_active, created_at)
                                         VALUES (@Id, @TradeName, @LegalName, @DocumentNumber, @Email, @Phone, @IsActive, @CreatedAt)";
