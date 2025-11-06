@@ -2,6 +2,7 @@
 using Moq;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.Shared;
 using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository;

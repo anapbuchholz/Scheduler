@@ -4,6 +4,7 @@ using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.ListUsers.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
 using System;
@@ -16,16 +17,20 @@ namespace Scheduler.API.Controllers
     public sealed class UsersController(
         IUseCase<RegisterUserRequest, Response> registerUserUseCase,
         IUseCase<LoginRequest, Response> loginUseCase,
-        IUseCase<GetUserRequest, Response> getUserUseCase) : BaseController
+        IUseCase<GetUserRequest, Response> getUserUseCase,
+        IUseCase<ListUsersRequest, Response> listUsersUseCase) : BaseController
     {   
         private readonly IUseCase<RegisterUserRequest, Response> _registerUserUseCase = registerUserUseCase;
         private readonly IUseCase<LoginRequest, Response> _loginUseCase = loginUseCase;
         private readonly IUseCase<GetUserRequest, Response> _getUserUseCase = getUserUseCase;
+        private readonly IUseCase<ListUsersRequest, Response> _listUsersUseCase = listUsersUseCase;
 
         [HttpGet]
-        public Task<IActionResult> ListUsersAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
+        [Authorize]
+        public async Task<IActionResult> ListUsersAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? name = null, [FromQuery] string? documentNumber = null, [FromQuery] string? email = null, [FromQuery] bool? isAdmin = null)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            var result = await _listUsersUseCase.ExecuteAsync(new ListUsersRequest(name, email, documentNumber, isAdmin, pageNumber, pageSize));
+            return GetHttpResponse(result);
         }
 
         [HttpGet("{id}")]
@@ -51,12 +56,14 @@ namespace Scheduler.API.Controllers
         }
 
         [HttpPatch("{id}")]
+        [Authorize]
         public Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] object company)
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public Task<IActionResult> DeleteUserAsync([FromRoute] Guid id)
         {
             throw new NotImplementedException("This method is not implemented yet.");

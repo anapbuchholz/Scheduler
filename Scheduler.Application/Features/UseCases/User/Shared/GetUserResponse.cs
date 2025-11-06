@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Scheduler.Application.Features.UseCases.User.GetUser.UseCase
+namespace Scheduler.Application.Features.UseCases.User.Shared
 {
     [ExcludeFromCodeCoverage]
     internal sealed class GetUserResponse(UserEntity entity)

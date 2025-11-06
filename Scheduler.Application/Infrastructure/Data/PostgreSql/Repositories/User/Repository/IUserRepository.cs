@@ -1,4 +1,6 @@
-﻿using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+﻿using Scheduler.Application.Features.Shared.IO.Query;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -15,5 +17,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
         Task<UserEntity?> GetUserByEmailAsync(string email);
 
         Task<UserEntity?> GetUserByDocumentNumberAsync(string documentNumber);
+
+        Task<PaginatedQueryResult<UserEntity>> ListUsersAsync(string? name, string? email, string? documentNumber, bool? isAdmin, PaginationInput paginationParameters);
     }
 }

@@ -1,4 +1,6 @@
-﻿using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+﻿using Scheduler.Application.Features.Shared.IO.Query;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System;
 using System.Threading.Tasks;
@@ -31,6 +33,43 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
         {
             var command = UserSqlConstants.INSERT_USER;
             await _sqlHelper.ExecuteAsync(command, user);
+        }
+
+        public Task<PaginatedQueryResult<UserEntity>> ListUsersAsync(string? name, string? email, string? documentNumber, bool? isAdmin, PaginationInput paginationParameters)
+        {
+            var whereClause = UserSqlConstants.ListUsersPaginationConstants.LIST_USERS_WHERE_STATEMENT;
+            var parameters = new Dapper.DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                whereClause += " AND LOWER(name) LIKE @Name";
+                parameters.Add("Name", $"%{name.ToLower()}%");
+            }
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                whereClause += " AND LOWER(email) LIKE @Email";
+                parameters.Add("Email", $"%{email.ToLower()}%");
+            }
+            if (!string.IsNullOrWhiteSpace(documentNumber))
+            {
+                whereClause += " AND tax_id = @DocumentNumber";
+                parameters.Add("DocumentNumber", documentNumber);
+            }
+            if (isAdmin.HasValue)
+            {
+                whereClause += " AND is_admin = @IsAdmin";
+                parameters.Add("IsAdmin", isAdmin.Value);
+            }
+            
+            var userList = _sqlHelper.SelectPaginated<UserEntity>(
+                paginationParameters,
+                UserSqlConstants.ListUsersPaginationConstants.LIST_USERS_SELECT_STATEMENT,
+                UserSqlConstants.ListUsersPaginationConstants.LIST_USERS_FROM_STATEMENT,
+                whereClause,
+                true,
+                parameters);
+
+            return userList;
         }
     }
 }

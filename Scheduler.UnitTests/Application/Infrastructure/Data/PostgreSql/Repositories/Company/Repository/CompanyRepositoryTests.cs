@@ -140,7 +140,13 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
 
             // Assert
             Assert.AreEqual(expectedResult.TotalCount, result.TotalCount);
-            _sqlHelperMock.VerifyAll();
+            _sqlHelperMock.Verify(x => x.SelectPaginated<CompanyEntity>(
+                It.Is<PaginationInput>(p => p.PageNumber == _paginationInput.PageNumber && p.PageSize == _paginationInput.PageSize),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.Is<string>(q => q.Contains("LOWER(trade_name) LIKE")),
+                true,
+                It.Is<DynamicParameters>(p => p.ParameterNames.Contains("Name") && p.Get<string>("Name").Contains(name))), Times.Once);
         }
 
         [TestMethod]
@@ -165,7 +171,13 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
 
             // Assert
             Assert.AreEqual(expectedResult.TotalCount, result.TotalCount);
-            _sqlHelperMock.VerifyAll();
+            _sqlHelperMock.Verify(x => x.SelectPaginated<CompanyEntity>(
+                It.Is<PaginationInput>(p => p.PageNumber == _paginationInput.PageNumber && p.PageSize == _paginationInput.PageSize),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.Is<string>(q => q.Contains("tax_id = @DocumentNumber")),
+                true,
+                It.Is<DynamicParameters>(p => p.ParameterNames.Contains("DocumentNumber") && p.Get<string>("DocumentNumber") == documentNumber)), Times.Once);
         }
 
         [TestMethod]

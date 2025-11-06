@@ -1,9 +1,13 @@
-﻿using Moq;
-using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository;
-using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+﻿using AutoFixture;
+using Moq;
+using Scheduler.Application.Features.Shared.IO.Query;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository
@@ -13,11 +17,15 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
     {
         private readonly Mock<ISqlHelper> _sqlHelperMock = null!;
         private readonly UserRepository _userRepository = null!;
+        private readonly Fixture _fixture;
+        private readonly PaginationInput _paginationInput;
 
         public UserRepositoryTests()
         {
             _sqlHelperMock = new Mock<ISqlHelper>();
             _userRepository = new UserRepository(_sqlHelperMock.Object);
+            _fixture = new Fixture();
+            _paginationInput = PaginationInput.Create(1, 10, null);
         }
 
         [TestMethod]
@@ -194,6 +202,49 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
                     UserSqlConstants.SELECT_USER_BY_ID,
                     It.Is<object>(p => p.GetType().GetProperty("Id").GetValue(p).ToString() == id.ToString())
                 ), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task ListUsersAsync_CallsSelectPaginated_AndReturnsPaginatedUsers()
+        {
+            //Arrange
+            var name = _fixture.Create<string>();
+            var email = _fixture.Create<string>();
+            var documentNumber = _fixture.Create<string>();
+            var isAdmin = _fixture.Create<bool>();
+            var expectedResult = _fixture.Create<PaginatedQueryResult<UserEntity>>();
+
+            _sqlHelperMock
+                .Setup(x => x.SelectPaginated<UserEntity>(
+                    It.IsAny<PaginationInput>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    true,
+                    It.IsAny<Dapper.DynamicParameters>()))
+                .ReturnsAsync(expectedResult);
+
+            //Act
+            var result =  await _userRepository.ListUsersAsync(name, email, documentNumber, isAdmin, _paginationInput);
+
+            //Assert
+            Assert.AreEqual(expectedResult, result);
+            _sqlHelperMock.Verify(x => x.SelectPaginated<UserEntity>(
+                It.Is<PaginationInput>(p => p.PageNumber == _paginationInput.PageNumber && p.PageSize == _paginationInput.PageSize),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.Is<string>(q => q.Contains("WHERE")),
+                true,
+                It.Is<Dapper.DynamicParameters>(p =>
+                    p.ParameterNames.Contains("Name") &&
+                    p.Get<string>("Name").Contains(name.ToLower()) &&
+                    p.ParameterNames.Contains("Email") &&
+                    p.Get<string>("Email").Contains(email.ToLower()) &&
+                    p.ParameterNames.Contains("DocumentNumber") &&
+                    p.Get<string>("DocumentNumber").Equals(documentNumber) &&
+                    p.ParameterNames.Contains("IsAdmin") &&
+                    p.Get<bool>("IsAdmin") == isAdmin
+                )), Times.Once);
         }
 
         [TestMethod]

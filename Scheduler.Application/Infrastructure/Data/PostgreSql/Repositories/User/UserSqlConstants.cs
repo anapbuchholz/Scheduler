@@ -53,5 +53,23 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
                                                         scheduler.users 
                                                     WHERE 
                                                         tax_id = @DocumentNumber";
+
+        public static class ListUsersPaginationConstants
+        {
+            public static string LIST_USERS_SELECT_STATEMENT = @"SELECT 
+                                                        id AS Id, 
+                                                        name AS Name,
+                                                        tax_id AS DocumentNumber,
+                                                        email AS Email,
+                                                        password_hash AS PasswordHash,
+                                                        is_admin AS IsAdmin,
+                                                        company_id AS Company,
+                                                        created_at AS CreatedAt,
+                                                        external_id AS ExternalId";
+
+            public static string LIST_USERS_FROM_STATEMENT = "FROM scheduler.users";
+
+            public static string LIST_USERS_WHERE_STATEMENT = "WHERE 1=1";
+        }
     }
 }

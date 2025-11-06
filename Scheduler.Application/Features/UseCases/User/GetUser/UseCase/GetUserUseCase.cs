@@ -1,5 +1,6 @@
 ﻿using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.UseCases.User.Shared;
 using Scheduler.Application.Infrastructure.Authorization.Interfaces;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository;
 using System;

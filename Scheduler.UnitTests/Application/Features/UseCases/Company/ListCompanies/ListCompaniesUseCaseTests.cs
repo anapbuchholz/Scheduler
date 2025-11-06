@@ -8,7 +8,6 @@ using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.Company.Repository;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 

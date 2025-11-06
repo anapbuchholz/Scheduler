@@ -5,9 +5,12 @@ using Scheduler.API.Controllers;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
 using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.ListUsers.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.Shared;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
+using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.UnitTests.Api.Controllers.Base;
 using System;
 using System.Net;
@@ -21,6 +24,7 @@ namespace Scheduler.UnitTests.Api.Controllers
         private readonly Mock<IUseCase<RegisterUserRequest, Response>> _registerUserUseCaseMock;
         private readonly Mock<IUseCase<LoginRequest, Response>> _loginUseCaseMock;
         private readonly Mock<IUseCase<GetUserRequest, Response>> _getUserUseCaseMock;
+        private readonly Mock<IUseCase<ListUsersRequest, Response>> _listUsersUseCaseMock;
         private readonly Fixture _fixture;
         private readonly UsersController _controller;
 
@@ -29,12 +33,14 @@ namespace Scheduler.UnitTests.Api.Controllers
             _registerUserUseCaseMock = new Mock<IUseCase<RegisterUserRequest, Response>>();
             _loginUseCaseMock = new Mock<IUseCase<LoginRequest, Response>>();
             _getUserUseCaseMock = new Mock<IUseCase<GetUserRequest, Response>>();
+            _listUsersUseCaseMock = new Mock<IUseCase<ListUsersRequest, Response>>();
             _fixture = new Fixture();
 
             _controller = new UsersController(
                 _registerUserUseCaseMock.Object,
                 _loginUseCaseMock.Object,
-                _getUserUseCaseMock.Object
+                _getUserUseCaseMock.Object,
+                _listUsersUseCaseMock.Object
             );
         }
 
@@ -110,7 +116,7 @@ namespace Scheduler.UnitTests.Api.Controllers
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var responseBodyMock = _fixture.Create<UserEntity>();
+            var responseBodyMock = _fixture.Create<GetUserResponse>();
             var responseMock = Response.CreateOkResponse(responseBodyMock);
             _getUserUseCaseMock
                 .Setup(x => x.ExecuteAsync(It.IsAny<GetUserRequest>()))
@@ -126,6 +132,33 @@ namespace Scheduler.UnitTests.Api.Controllers
             AssertHttpResponse(resultValue, HttpStatusCode.OK, responseBodyMock);
             _getUserUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<GetUserRequest>(
                 r => r.UserId == userId)), Times.Once);
+        }
+
+        #endregion
+
+        #region
+
+        [TestMethod]
+        public async Task ListUsersAsync_WhenCalled_ShouldReturnOkWithUsersList()
+        {
+            // Arrange
+            var pageNumber = 1;
+            var pageSize = 10;
+            var responseBodyMock = _fixture.Create<PaginatedQueryResult<GetUserResponse>>();
+            var responseMock = Response.CreateOkResponse(responseBodyMock);
+            _listUsersUseCaseMock
+                .Setup(x => x.ExecuteAsync(It.IsAny<ListUsersRequest>()))
+                .ReturnsAsync(responseMock);
+            // Act
+            var result = await _controller.ListUsersAsync(pageNumber, pageSize);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var resultValue = result as OkObjectResult;
+            Assert.IsNotNull(resultValue);
+            AssertHttpResponse(resultValue, HttpStatusCode.OK, responseBodyMock);
+            _listUsersUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<ListUsersRequest>(
+                r => r.PaginationParameters.PageNumber == pageNumber
+                  && r.PaginationParameters.PageSize == pageSize)), Times.Once);
         }
 
         #endregion
