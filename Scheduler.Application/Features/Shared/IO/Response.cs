@@ -52,9 +52,9 @@ namespace Scheduler.Application.Features.Shared.IO
             return new Response(HttpStatusCode.InternalServerError, message);
         }
 
-        public static Response CreateNotFoundResponse()
+        public static Response CreateNotFoundResponse(in string? message = null)
         {
-            return new Response(HttpStatusCode.NotFound);
+            return new Response(HttpStatusCode.NotFound, message);
         }
 
         public static Response CreateNoContentResponse()

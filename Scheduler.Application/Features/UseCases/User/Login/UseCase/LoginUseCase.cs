@@ -26,7 +26,7 @@ namespace Scheduler.Application.Features.UseCases.User.Login.UseCase
                 var (IsAuthenticated, JwtToken) = await _fireBaseAuthenticationService.LoginInFireBase(request.Email!, request.Password!);
                 if (!IsAuthenticated)
                 {
-                    return Response.CreateNotFoundResponse();
+                    return Response.CreateNotFoundResponse("Nome de usuário ou senha não encontrados.");
                 }
 
                 return Response.CreateOkResponse(new { Token = JwtToken });

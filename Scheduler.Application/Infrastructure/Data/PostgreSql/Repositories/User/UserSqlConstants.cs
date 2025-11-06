@@ -9,6 +9,21 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
                                             (id, name, tax_id, email, password_hash, is_admin, company_id, created_at, external_id) 
                                             VALUES (@Id, @Name, @DocumentNumber, @Email, @PasswordHash, @IsAdmin, @CompanyId, @CreatedAt, @ExternalId)";
 
+        public static string SELECT_USER_BY_ID = @"SELECT 
+                                                        id AS Id, 
+                                                        name AS Name,
+                                                        tax_id AS DocumentNumber,
+                                                        email AS Email,
+                                                        password_hash AS PasswordHash,
+                                                        is_admin AS IsAdmin,
+                                                        company_id AS CompanyId,
+                                                        created_at AS CreatedAt,
+                                                        external_id AS ExternalId
+                                                    FROM 
+                                                        scheduler.users 
+                                                    WHERE 
+                                                        id = @Id";
+
         public static string SELECT_USER_BY_EMAIL = @"SELECT 
                                                         id AS Id, 
                                                         name AS Name,

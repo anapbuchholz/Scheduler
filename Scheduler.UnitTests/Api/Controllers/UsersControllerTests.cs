@@ -4,8 +4,10 @@ using Moq;
 using Scheduler.API.Controllers;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
+using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
 using Scheduler.UnitTests.Api.Controllers.Base;
 using System;
 using System.Net;
@@ -18,6 +20,7 @@ namespace Scheduler.UnitTests.Api.Controllers
     {
         private readonly Mock<IUseCase<RegisterUserRequest, Response>> _registerUserUseCaseMock;
         private readonly Mock<IUseCase<LoginRequest, Response>> _loginUseCaseMock;
+        private readonly Mock<IUseCase<GetUserRequest, Response>> _getUserUseCaseMock;
         private readonly Fixture _fixture;
         private readonly UsersController _controller;
 
@@ -25,11 +28,13 @@ namespace Scheduler.UnitTests.Api.Controllers
         {
             _registerUserUseCaseMock = new Mock<IUseCase<RegisterUserRequest, Response>>();
             _loginUseCaseMock = new Mock<IUseCase<LoginRequest, Response>>();
+            _getUserUseCaseMock = new Mock<IUseCase<GetUserRequest, Response>>();
             _fixture = new Fixture();
 
             _controller = new UsersController(
                 _registerUserUseCaseMock.Object,
-                _loginUseCaseMock.Object
+                _loginUseCaseMock.Object,
+                _getUserUseCaseMock.Object
             );
         }
 
@@ -94,6 +99,33 @@ namespace Scheduler.UnitTests.Api.Controllers
                   && r.Password == requestMock.Password
                   && r.IsAdmin == requestMock.IsAdmin
                   && r.CompanyId == requestMock.CompanyId)), Times.Once);
+        }
+
+        #endregion
+
+        #region GetUserAsync
+
+        [TestMethod]
+        public async Task GetUserAsync_WhenCalled_ShouldReturnOkWithUser()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var responseBodyMock = _fixture.Create<UserEntity>();
+            var responseMock = Response.CreateOkResponse(responseBodyMock);
+            _getUserUseCaseMock
+                .Setup(x => x.ExecuteAsync(It.IsAny<GetUserRequest>()))
+                .ReturnsAsync(responseMock);
+
+            // Act
+            var result = await _controller.GetUserAsync(userId);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var resultValue = result as OkObjectResult;
+            Assert.IsNotNull(resultValue);
+            AssertHttpResponse(resultValue, HttpStatusCode.OK, responseBodyMock);
+            _getUserUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<GetUserRequest>(
+                r => r.UserId == userId)), Times.Once);
         }
 
         #endregion

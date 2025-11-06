@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
 using System;
@@ -14,13 +15,15 @@ namespace Scheduler.API.Controllers
     [Route("api/[controller]")]
     public sealed class UsersController(
         IUseCase<RegisterUserRequest, Response> registerUserUseCase,
-        IUseCase<LoginRequest, Response> loginUseCase) : BaseController
+        IUseCase<LoginRequest, Response> loginUseCase,
+        IUseCase<GetUserRequest, Response> getUserUseCase) : BaseController
     {   
         private readonly IUseCase<RegisterUserRequest, Response> _registerUserUseCase = registerUserUseCase;
         private readonly IUseCase<LoginRequest, Response> _loginUseCase = loginUseCase;
+        private readonly IUseCase<GetUserRequest, Response> _getUserUseCase = getUserUseCase;
 
         [HttpGet]
-        public async Task<IActionResult> ListUsersAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
+        public Task<IActionResult> ListUsersAsync([FromQuery] string? name = null, [FromQuery] string? documentNumber = null)
         {
             throw new NotImplementedException("This method is not implemented yet.");
         }
@@ -28,7 +31,8 @@ namespace Scheduler.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserAsync([FromRoute] Guid id)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            var result = await _getUserUseCase.ExecuteAsync(new GetUserRequest { UserId = id });
+            return GetHttpResponse(result);
         }
 
         [HttpPost("authenticate")]

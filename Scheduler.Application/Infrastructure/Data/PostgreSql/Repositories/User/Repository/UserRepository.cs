@@ -1,5 +1,6 @@
 ﻿using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Sql;
+using System;
 using System.Threading.Tasks;
 
 namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Repository
@@ -7,6 +8,12 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
     internal sealed class UserRepository(ISqlHelper sqlhelper) : IUserRepository
     {
         private readonly ISqlHelper _sqlHelper = sqlhelper;
+
+        public async Task<UserEntity?> GetUserByIdAsync(Guid Id)
+        {
+            var query = UserSqlConstants.SELECT_USER_BY_ID;
+            return await _sqlHelper.SelectFirstOrDefaultAsync<UserEntity>(query, new { Id });
+        }
 
         public async Task<UserEntity?> GetUserByDocumentNumberAsync(string documentNumber)
         {
