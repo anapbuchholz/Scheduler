@@ -2,7 +2,7 @@
 
 namespace Scheduler.Application.Features.Shared.ValueObjects
 {
-    internal abstract class BaseValueObject(in string value, in int maxLength, in int minLength)
+    internal abstract class BaseValueObject(in string value, in int maxLength, in int minLength = 1)
     {
         public string Value { get; private set; } = value;
         public int MaxLength { get; private set; } = maxLength;

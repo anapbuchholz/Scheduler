@@ -35,6 +35,20 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
             await _sqlHelper.ExecuteAsync(command, user);
         }
 
+        public async Task UpdateUserAsync(Guid Id, UserEntity user)
+        {
+            var command = UserSqlConstants.UPDATE_USER_BY_ID;
+            await _sqlHelper.ExecuteAsync(command, new
+            {
+                user.Name,
+                user.Email,
+                user.PasswordHash,
+                user.IsAdmin,
+                user.CompanyId,
+                Id
+            });
+        }
+
         public Task<PaginatedQueryResult<UserEntity>> ListUsersAsync(string? name, string? email, string? documentNumber, bool? isAdmin, PaginationInput paginationParameters)
         {
             var whereClause = UserSqlConstants.ListUsersPaginationConstants.LIST_USERS_WHERE_STATEMENT;

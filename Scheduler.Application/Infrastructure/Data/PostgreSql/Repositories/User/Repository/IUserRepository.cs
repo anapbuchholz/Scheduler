@@ -12,6 +12,8 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
     {
         Task RegisterUserAsync(UserEntity user);
 
+        Task UpdateUserAsync(Guid Id, UserEntity user);
+
         Task<UserEntity?> GetUserByIdAsync(Guid Id);
 
         Task<UserEntity?> GetUserByEmailAsync(string email);

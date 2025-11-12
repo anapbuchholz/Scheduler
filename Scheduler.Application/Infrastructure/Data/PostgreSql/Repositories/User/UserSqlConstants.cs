@@ -24,6 +24,19 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
                                                     WHERE 
                                                         id = @Id";
 
+        public static string UPDATE_USER_BY_ID = @"UPDATE 
+                                                        scheduler.users
+                                                   SET
+                                                        name = @Name,
+                                                        tax_id = @DocumentNumber,
+                                                        email = @Email,
+                                                        password_hash = @PasswordHash,
+                                                        is_admin = @IsAdmin,
+                                                        company_id = @CompanyId,
+                                                        external_id = @ExternalId
+                                                    WHERE
+                                                        id = @Id;";
+
         public static string SELECT_USER_BY_EMAIL = @"SELECT 
                                                         id AS Id, 
                                                         name AS Name,

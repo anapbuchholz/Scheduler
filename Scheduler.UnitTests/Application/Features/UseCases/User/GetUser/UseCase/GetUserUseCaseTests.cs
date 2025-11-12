@@ -84,7 +84,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.GetUser.UseCase
             _userSessionMock.Setup(x => x.IsAdmin)
                             .Returns(false);
 
-            _userSessionMock.Setup(x => x.UserId)
+            _userSessionMock.Setup(x => x.UserExternalId)
                             .Returns(userExternalId);
             var expectedResponseBody = new GetUserResponse(user);
 
@@ -116,7 +116,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.GetUser.UseCase
             _userSessionMock.Setup(x => x.IsAdmin)
                             .Returns(false);
 
-            _userSessionMock.Setup(x => x.UserId)
+            _userSessionMock.Setup(x => x.UserExternalId)
                             .Returns(anotherUserExternalId);
             // Act
             var response = await _useCase.ExecuteAsync(request);

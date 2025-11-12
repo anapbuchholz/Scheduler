@@ -23,7 +23,7 @@ namespace Scheduler.Application.Features.UseCases.User.Login.UseCase
                     return Response.CreateInvalidParametersResponse(validationResult.ErrorMessage);
                 }
 
-                var (IsAuthenticated, JwtToken) = await _fireBaseAuthenticationService.LoginInFireBase(request.Email!, request.Password!);
+                var (IsAuthenticated, JwtToken) = await _fireBaseAuthenticationService.LoginInFireBaseAsync(request.Email!, request.Password!);
                 if (!IsAuthenticated)
                 {
                     return Response.CreateNotFoundResponse("Nome de usuário ou senha não encontrados.");

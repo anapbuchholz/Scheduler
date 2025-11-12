@@ -7,6 +7,7 @@ using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.ListUsers.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase;
 using System;
 using System.Threading.Tasks;
 
@@ -18,12 +19,14 @@ namespace Scheduler.API.Controllers
         IUseCase<RegisterUserRequest, Response> registerUserUseCase,
         IUseCase<LoginRequest, Response> loginUseCase,
         IUseCase<GetUserRequest, Response> getUserUseCase,
-        IUseCase<ListUsersRequest, Response> listUsersUseCase) : BaseController
+        IUseCase<ListUsersRequest, Response> listUsersUseCase,
+        IUseCase<UpdateUserRequest, Response> updateUserUseCase) : BaseController
     {   
         private readonly IUseCase<RegisterUserRequest, Response> _registerUserUseCase = registerUserUseCase;
         private readonly IUseCase<LoginRequest, Response> _loginUseCase = loginUseCase;
         private readonly IUseCase<GetUserRequest, Response> _getUserUseCase = getUserUseCase;
         private readonly IUseCase<ListUsersRequest, Response> _listUsersUseCase = listUsersUseCase;
+        private readonly IUseCase<UpdateUserRequest, Response> _updateUserUseCase = updateUserUseCase;
 
         [HttpGet]
         [Authorize]
@@ -57,9 +60,11 @@ namespace Scheduler.API.Controllers
 
         [HttpPatch("{id}")]
         [Authorize]
-        public Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] object company)
+        public async Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserRequest request)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            request.SetId(id);
+            var result = await _updateUserUseCase.ExecuteAsync(request);
+            return GetHttpResponse(result);
         }
 
         [HttpDelete("{id}")]

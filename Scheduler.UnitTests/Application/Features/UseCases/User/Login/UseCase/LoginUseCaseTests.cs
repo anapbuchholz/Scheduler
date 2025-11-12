@@ -42,7 +42,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.UseCase
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.AreEqual(validationModel.ErrorMessage, response.ValidationErrorMessage);
             Assert.IsNull(response.Body);
-            _fireBaseAuthServiceMock.Verify(x => x.LoginInFireBase(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _fireBaseAuthServiceMock.Verify(x => x.LoginInFireBaseAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.UseCase
             var validationModel = new RequestValidationModel(new List<string>());
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _fireBaseAuthServiceMock
-                .Setup(x => x.LoginInFireBase(request.Email!, request.Password!))
+                .Setup(x => x.LoginInFireBaseAsync(request.Email!, request.Password!))
                 .ReturnsAsync((false, null));
 
             // Act
@@ -73,7 +73,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.UseCase
             var token = Guid.NewGuid().ToString();
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _fireBaseAuthServiceMock
-                .Setup(x => x.LoginInFireBase(request.Email!, request.Password!))
+                .Setup(x => x.LoginInFireBaseAsync(request.Email!, request.Password!))
                 .ReturnsAsync((true, token));
 
             // Act
@@ -96,7 +96,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.UseCase
             var validationModel = new RequestValidationModel(new List<string>());
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _fireBaseAuthServiceMock
-                .Setup(x => x.LoginInFireBase(request.Email!, request.Password!))
+                .Setup(x => x.LoginInFireBaseAsync(request.Email!, request.Password!))
                 .ThrowsAsync(new Exception("Firebase error"));
 
             // Act

@@ -8,39 +8,35 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
 {
     internal sealed class RegisterUserValidator : IRequestValidator<RegisterUserRequest>
     {
-        private readonly int _nameMaxLength = 255;
-        private readonly int _passwordMinLength = 6;
-        private readonly int _passwordMaxLength = 16;
-
         public Task<RequestValidationModel> ValidateAsync(RegisterUserRequest request)
         {
             var errors = new List<string>();
 
             #region Name
-            var isNameEmpty = string.IsNullOrWhiteSpace(request.Name);
-            if (isNameEmpty)
+            var userNameValueObject = UserNameValueObject.Create(request.Name!);
+            if (userNameValueObject.IsNullOrWhiteSpace)
             {
                 errors.Add("O nome deve ser informado.");
             }
-            if (!isNameEmpty && request.Name?.Length > _nameMaxLength)
+            if (userNameValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"O nome deve conter no máximo {_nameMaxLength} caracteres.");
+                errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres.");
             }
             #endregion
 
             #region Password
-            var isPasswordEmpty = string.IsNullOrWhiteSpace(request.Password);
-            if (isPasswordEmpty)
+            var userPasswordValueObject = UserPasswordValueObject.Create(request.Password!);
+            if (userPasswordValueObject.IsNullOrEmpty)
             {
                 errors.Add("A senha deve ser informada.");
             }
-            if (!isPasswordEmpty && request.Password!.Length < _passwordMinLength)
+            if (userPasswordValueObject.IsLessThanMinLength)
             {
-                errors.Add($"A senha deve conter no mínimo {_passwordMinLength} caracteres.");
+                errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres.");
             }
-            if (!isPasswordEmpty && request.Password!.Length > _passwordMaxLength)
+            if (userPasswordValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"A senha deve conter no máximo {_passwordMaxLength} caracteres.");
+                errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres.");
             }
             #endregion
 

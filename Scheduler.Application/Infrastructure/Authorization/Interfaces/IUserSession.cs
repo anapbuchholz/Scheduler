@@ -6,7 +6,7 @@
         
         public string UserEmail { get; }
         
-        public string UserId { get; }
+        public string UserExternalId { get; }
         
         public bool IsAdmin { get; }
     }

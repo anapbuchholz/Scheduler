@@ -12,7 +12,7 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
         private readonly HttpClient _httpClient = httpClient;
         private readonly IFireBaseAdminProxy _firebaseAdminProxy = fireBaseAdminProxy;
 
-        public async Task<(bool IsAuthenticated, string? JwtToken)> LoginInFireBase(string email, string password)
+        public async Task<(bool IsAuthenticated, string? JwtToken)> LoginInFireBaseAsync(string email, string password)
         {
             var request = new
             {
@@ -31,10 +31,11 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
             return (false, null);
         }
 
-        public async Task<(string? ExternalId, bool RegisteredWithSuccess)> RegisterFireBaseUserAsync(string email, string password, string displayName)
+        public async Task<(string? ExternalId, bool RegisteredWithSuccess)> RegisterFireBaseUserAsync(string email, string password, string name, bool isAdmin)
         {
             try
             {
+                string displayName = DefineUserDisplayName(name, isAdmin);
                 var userArgs = new UserRecordArgs()
                 {
                     Email = email,
@@ -51,9 +52,26 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
             }
         }
 
-        public async Task UpdateFireBaseUser(UserRecordArgs userArgs)
+        public async Task<(string? ExternalId, bool RegisteredWithSuccess)> UpdateFireBaseUserAsync(string uid, string email, string password, string name, bool isAdmin)
         {
-            await _firebaseAdminProxy.UpdateUserAsync(userArgs);
+            try
+            {
+                string displayName = DefineUserDisplayName(name, isAdmin);
+                var userArgs = new UserRecordArgs()
+                {
+                    Uid = uid,
+                    Email = email,
+                    Password = password,
+                    DisplayName = displayName
+                };
+
+                var userRecord = await _firebaseAdminProxy.UpdateUserAsync(userArgs);
+                return (userRecord.Uid, true);
+            }
+            catch
+            {
+                return (null, false);
+            }
         }
 
         public async Task<bool> DeleteFireBaseUserAsync(string userEmail)
@@ -70,9 +88,18 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
             }
         }
 
-        public async Task<UserRecord> GetFireBaseUserByEmail(string userEmail)
+        public async Task<UserRecord> GetFireBaseUserByEmailAsync(string userEmail)
         {
             return await _firebaseAdminProxy.GetUserByEmailAsync(userEmail);
         }
+
+        #region Private methods
+        private static string DefineUserDisplayName(string name, bool isAdmin)
+        {
+            var userPermission = isAdmin ? "1" : "0";
+            var displayName = $"{name}-{userPermission}";
+            return displayName;
+        }
+        #endregion
     }
 }

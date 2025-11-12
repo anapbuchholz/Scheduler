@@ -9,6 +9,7 @@ using Scheduler.Application.Features.UseCases.User.ListUsers.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.Shared;
+using Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase;
 using Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User.Entity;
 using Scheduler.Application.Infrastructure.Data.Shared.Helpers.Pagination;
 using Scheduler.UnitTests.Api.Controllers.Base;
@@ -25,6 +26,7 @@ namespace Scheduler.UnitTests.Api.Controllers
         private readonly Mock<IUseCase<LoginRequest, Response>> _loginUseCaseMock;
         private readonly Mock<IUseCase<GetUserRequest, Response>> _getUserUseCaseMock;
         private readonly Mock<IUseCase<ListUsersRequest, Response>> _listUsersUseCaseMock;
+        private readonly Mock<IUseCase<UpdateUserRequest, Response>> _updateUsersUseCaseMock;
         private readonly Fixture _fixture;
         private readonly UsersController _controller;
 
@@ -34,13 +36,15 @@ namespace Scheduler.UnitTests.Api.Controllers
             _loginUseCaseMock = new Mock<IUseCase<LoginRequest, Response>>();
             _getUserUseCaseMock = new Mock<IUseCase<GetUserRequest, Response>>();
             _listUsersUseCaseMock = new Mock<IUseCase<ListUsersRequest, Response>>();
+            _updateUsersUseCaseMock = new Mock<IUseCase<UpdateUserRequest, Response>>();
             _fixture = new Fixture();
 
             _controller = new UsersController(
                 _registerUserUseCaseMock.Object,
                 _loginUseCaseMock.Object,
                 _getUserUseCaseMock.Object,
-                _listUsersUseCaseMock.Object
+                _listUsersUseCaseMock.Object,
+                _updateUsersUseCaseMock.Object
             );
         }
 
