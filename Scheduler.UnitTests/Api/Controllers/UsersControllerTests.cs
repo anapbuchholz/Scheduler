@@ -140,7 +140,7 @@ namespace Scheduler.UnitTests.Api.Controllers
 
         #endregion
 
-        #region
+        #region ListUsersAsync
 
         [TestMethod]
         public async Task ListUsersAsync_WhenCalled_ShouldReturnOkWithUsersList()
