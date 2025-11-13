@@ -48,19 +48,18 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase
                     return Response.CreateForbiddenResponse();
                 }
 
-                var isTryingToChangeUserDocumentNumber = currentUser.DocumentNumber != request.DocumentNumber;
+                var isTryingToChangeUserDocumentNumber = request.DocumentNumber != null && currentUser.DocumentNumber != request.DocumentNumber;
                 if (isTryingToChangeUserDocumentNumber)
                 {
-                    var existsUserWithSameDocumentNumber = (await _userRepository.GetUserByDocumentNumberAsync(currentUser.DocumentNumber)) != null;
+                    var existsUserWithSameDocumentNumber = (await _userRepository.GetUserByDocumentNumberAsync(request.DocumentNumber!)) != null;
                     if (existsUserWithSameDocumentNumber)
                     {
                         return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse número de documento.");
                     }
-
-                    currentUser.DocumentNumber = request.DocumentNumber!;
                 }
 
                 currentUser.Name = request.Name ?? currentUser.Name;
+                currentUser.DocumentNumber = request.DocumentNumber ?? currentUser.DocumentNumber;
                 currentUser.IsAdmin = request.IsAdmin ?? currentUser.IsAdmin;
                 if (request.Password != null)
                 {
@@ -69,9 +68,9 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase
                     currentUser.PasswordHash = encryptedPassword;
                 }
 
-                var (_, RegisteredWithSuccess) = await _authenticationService
+                var (externalId, registeredWithSuccess) = await _authenticationService
                     .UpdateFireBaseUserAsync(currentUser.ExternalId, currentUser.Email, request.Password!, currentUser.Name, currentUser.IsAdmin);
-                if (!RegisteredWithSuccess)
+                if (!registeredWithSuccess)
                 {
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
                 }

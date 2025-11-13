@@ -41,10 +41,9 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
             await _sqlHelper.ExecuteAsync(command, new
             {
                 user.Name,
-                user.Email,
+                user.DocumentNumber,
                 user.PasswordHash,
                 user.IsAdmin,
-                user.CompanyId,
                 Id
             });
         }

@@ -29,11 +29,8 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
                                                    SET
                                                         name = @Name,
                                                         tax_id = @DocumentNumber,
-                                                        email = @Email,
                                                         password_hash = @PasswordHash,
-                                                        is_admin = @IsAdmin,
-                                                        company_id = @CompanyId,
-                                                        external_id = @ExternalId
+                                                        is_admin = @IsAdmin
                                                     WHERE
                                                         id = @Id;";
 
