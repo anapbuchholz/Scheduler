@@ -19,11 +19,11 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.Validators
                 var userNameValueObject = UserNameValueObject.Create(request.Name);
                 if (userNameValueObject.IsNullOrWhiteSpace)
                 {
-                    errors.Add("O nome informado é inválido.");
+                    errors.Add("O nome informado é inválido");
                 }
                 if (userNameValueObject.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres.");
+                    errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres");
                 }
             }
 
@@ -37,21 +37,21 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.Validators
 
                 if (!documentNumberValueObject.IsDigitOnly)
                 {
-                    errors.Add("O número do documento deve conter apenas dígitos numéricos.");
+                    errors.Add("O número do documento deve conter apenas dígitos numéricos");
                 }
                 if (documentNumberValueObject.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O número do documento deve conter no máximo {documentNumberValueObject.MaxLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no máximo {documentNumberValueObject.MaxLength} dígitos");
                 }
                 if (documentNumberValueObject.IsLessThanMinLength)
                 {
-                    errors.Add($"O número do documento deve conter no mínimo {documentNumberValueObject.MinLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no mínimo {documentNumberValueObject.MinLength} dígitos");
                 }
                 if (documentNumberValueObject.IsDigitOnly && !documentNumberValueObject.IsGreaterThanMaxLength && !documentNumberValueObject.IsLessThanMinLength)
                 {
                     if (!documentNumberValueObject.IsValid)
                     {
-                        errors.Add("O número do documento informado é inválido.");
+                        errors.Add("O número do documento informado é inválido");
                     }
                 }
             }
@@ -65,15 +65,15 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.Validators
                 var userPasswordValueObject = UserPasswordValueObject.Create(request.Password!);
                 if (userPasswordValueObject.IsNullOrEmpty)
                 {
-                    errors.Add("A senha informada é inválida.");
+                    errors.Add("A senha informada é inválida");
                 }
                 if (userPasswordValueObject.IsLessThanMinLength)
                 {
-                    errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres.");
+                    errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres");
                 }
                 if (userPasswordValueObject.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres.");
+                    errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres");
                 }
             }
 

@@ -18,11 +18,11 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             var isTradeNameEmpty = string.IsNullOrWhiteSpace(request.TradeName);
             if (isTradeNameEmpty)
             {
-                errors.Add("O nome fantasia deve ser informado.");
+                errors.Add("O nome fantasia deve ser informado");
             }
             if (!isTradeNameEmpty && request.TradeName?.Length > _tradeNameMaxLength)
             {
-                errors.Add($"O nome fantasia deve conter no máximo {_tradeNameMaxLength} caracteres.");
+                errors.Add($"O nome fantasia deve conter no máximo {_tradeNameMaxLength} caracteres");
             }
             #endregion
 
@@ -34,7 +34,7 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             }
             if (!isLegalNameEmpty && request.LegalName?.Length > _legalNameMaxLength)
             {
-                errors.Add($"A razão social deve conter no máximo {_legalNameMaxLength} caracteres.");
+                errors.Add($"A razão social deve conter no máximo {_legalNameMaxLength} caracteres");
             }
             #endregion
 
@@ -44,17 +44,17 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             {
                 if (!email.IsValidEmail)
                 {
-                    errors.Add("O E-mail informado é inválido.");
+                    errors.Add("O E-mail informado é inválido");
                 }
 
                 if(email.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres");
                 }
 
                 if (email.IsLessThanMinLength)
                 {
-                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres");
                 }
             }
             #endregion
@@ -66,15 +66,15 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             {
                 if (phoneNumber.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O telefone deve conter no máximo {phoneNumber.MaxLength} dígitos.");
+                    errors.Add($"O telefone deve conter no máximo {phoneNumber.MaxLength} dígitos");
                 }
                 if (phoneNumber.IsLessThanMinLength)
                 {
-                    errors.Add($"O telefone deve conter no mínimo {phoneNumber.MinLength} dígitos.");
+                    errors.Add($"O telefone deve conter no mínimo {phoneNumber.MinLength} dígitos");
                 }
                 if (!phoneNumber.IsDigitOnly)
                 {
-                    errors.Add("O telefone deve conter apenas números.");
+                    errors.Add("O telefone deve conter apenas números");
                 }
             }
 
@@ -85,28 +85,28 @@ namespace Scheduler.Application.Features.UseCases.Company.RegisterCompany.Valida
             var documentNumber = DocumentNumberValueObject.Create(request.DocumentNumber!);
             if (documentNumber.IsNullOrWhiteSpace)
             {
-                errors.Add("O CNPJ/CPF deve ser informado.");
+                errors.Add("O CNPJ/CPF deve ser informado");
             }
 
             if (!documentNumber.IsNullOrWhiteSpace)
             {
                 if (!documentNumber.IsDigitOnly)
                 {
-                    errors.Add("O CNPJ/CPF deve conter apenas números.");
+                    errors.Add("O CNPJ/CPF deve conter apenas números");
                 }
                 if (documentNumber.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O CNPJ/CPF deve conter no máximo {documentNumber.MaxLength} dígitos.");
+                    errors.Add($"O CNPJ/CPF deve conter no máximo {documentNumber.MaxLength} dígitos");
                 }
                 if (documentNumber.IsLessThanMinLength)
                 {
-                    errors.Add($"O CNPJ/CPF deve conter no mínimo {documentNumber.MinLength} dígitos.");
+                    errors.Add($"O CNPJ/CPF deve conter no mínimo {documentNumber.MinLength} dígitos");
                 }
                 if (documentNumber.IsDigitOnly && !documentNumber.IsGreaterThanMaxLength && !documentNumber.IsLessThanMinLength)
                 {
                     if (!documentNumber.IsValid)
                     {
-                        errors.Add("O CNPJ/CPF informado é inválido.");
+                        errors.Add("O CNPJ/CPF informado é inválido");
                     }
                 }
             }

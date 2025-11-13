@@ -17,11 +17,11 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             var userNameValueObject = UserNameValueObject.Create(request.Name!);
             if (userNameValueObject.IsNullOrWhiteSpace)
             {
-                errors.Add("O nome deve ser informado.");
+                errors.Add("O nome deve ser informado");
             }
             if (userNameValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres.");
+                errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres");
             }
 
             #endregion
@@ -31,15 +31,15 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             var userPasswordValueObject = UserPasswordValueObject.Create(request.Password!);
             if (userPasswordValueObject.IsNullOrEmpty)
             {
-                errors.Add("A senha deve ser informada.");
+                errors.Add("A senha deve ser informada");
             }
             if (userPasswordValueObject.IsLessThanMinLength)
             {
-                errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres.");
+                errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres");
             }
             if (userPasswordValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres.");
+                errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres");
             }
 
             #endregion
@@ -49,28 +49,28 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             var documentNumber = DocumentNumberValueObject.Create(request.DocumentNumber!);
             if (documentNumber.IsNullOrWhiteSpace)
             {
-                errors.Add("O número do documento deve ser informado.");
+                errors.Add("O número do documento deve ser informado");
             }
             
             if (!documentNumber.IsNullOrWhiteSpace)
             {
                 if (!documentNumber.IsDigitOnly)
                 {
-                    errors.Add("O número do documento deve conter apenas dígitos numéricos.");
+                    errors.Add("O número do documento deve conter apenas dígitos numéricos");
                 }
                 if (documentNumber.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O número do documento deve conter no máximo {documentNumber.MaxLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no máximo {documentNumber.MaxLength} dígitos");
                 }
                 if (documentNumber.IsLessThanMinLength)
                 {
-                    errors.Add($"O número do documento deve conter no mínimo {documentNumber.MinLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no mínimo {documentNumber.MinLength} dígitos");
                 }
                 if (documentNumber.IsDigitOnly && !documentNumber.IsGreaterThanMaxLength && !documentNumber.IsLessThanMinLength)
                 {
                     if (!documentNumber.IsValid)
                     {
-                        errors.Add("O número do documento informado é inválido.");
+                        errors.Add("O número do documento informado é inválido");
                     }
                 }
             }
@@ -82,21 +82,21 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             var email = EmailValueObject.Create(request.Email!);
             if (email.IsNullOrWhiteSpace)
             {
-                errors.Add("O E-mail deve ser informado.");
+                errors.Add("O E-mail deve ser informado");
             }
             if (!email.IsNullOrWhiteSpace)
             {
                 if (email.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres");
                 }
                 if (email.IsLessThanMinLength)
                 {
-                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres");
                 }
                 if (!email.IsValidEmail)
                 {
-                    errors.Add("O E-mail informado é inválido.");
+                    errors.Add("O E-mail informado é inválido");
                 }
             }
 
@@ -106,7 +106,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
 
             if (!request.IsAdmin && request.CompanyId == null)
             {
-                errors.Add("O Id da empresa deve ser informado para usuários não administradores.");
+                errors.Add("O Id da empresa deve ser informado para usuários não administradores");
             }
 
             #endregion

@@ -12,11 +12,11 @@ namespace Scheduler.Application.Features.UseCases.User.Login.Validators
             var errors = new List<string>();
             if (string.IsNullOrWhiteSpace(request.Email))
             {
-                errors.Add("O E-mail deve ser informado.");
+                errors.Add("O E-mail deve ser informado");
             }
             if (string.IsNullOrWhiteSpace(request.Password))
             {
-                errors.Add("A senha deve ser informada.");
+                errors.Add("A senha deve ser informada");
             }
 
             return Task.FromResult(new RequestValidationModel(errors));
