@@ -159,7 +159,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Va
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O número do CPF deve ser informado.");
+            CollectionAssert.Contains(result.Errors, "O número do documento deve ser informado.");
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Va
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O número do CPF deve conter apenas números.");
+            CollectionAssert.Contains(result.Errors, "O número do documento deve conter apenas dígitos numéricos.");
         }
 
         [TestMethod]
@@ -195,7 +195,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Va
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O número do CPF deve conter no máximo 14 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O número do documento deve conter no máximo 14 dígitos.");
         }
 
         [TestMethod]
@@ -213,7 +213,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Va
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O número do CPF deve conter no mínimo 11 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O número do documento deve conter no mínimo 11 dígitos.");
         }
 
         [TestMethod]
@@ -231,7 +231,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Va
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O número do CPF informado é inválido.");
+            CollectionAssert.Contains(result.Errors, "O número do documento informado é inválido.");
         }
 
         [TestMethod]

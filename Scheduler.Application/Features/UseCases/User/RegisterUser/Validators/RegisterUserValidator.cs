@@ -13,6 +13,7 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             var errors = new List<string>();
 
             #region Name
+
             var userNameValueObject = UserNameValueObject.Create(request.Name!);
             if (userNameValueObject.IsNullOrWhiteSpace)
             {
@@ -22,9 +23,11 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             {
                 errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres.");
             }
+
             #endregion
 
             #region Password
+
             var userPasswordValueObject = UserPasswordValueObject.Create(request.Password!);
             if (userPasswordValueObject.IsNullOrEmpty)
             {
@@ -38,40 +41,44 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             {
                 errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres.");
             }
+
             #endregion
 
             #region DocumentNumber
+
             var documentNumber = DocumentNumberValueObject.Create(request.DocumentNumber!);
             if (documentNumber.IsNullOrWhiteSpace)
             {
-                errors.Add("O número do CPF deve ser informado.");
+                errors.Add("O número do documento deve ser informado.");
             }
             
             if (!documentNumber.IsNullOrWhiteSpace)
             {
                 if (!documentNumber.IsDigitOnly)
                 {
-                    errors.Add("O número do CPF deve conter apenas números.");
+                    errors.Add("O número do documento deve conter apenas dígitos numéricos.");
                 }
                 if (documentNumber.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O número do CPF deve conter no máximo {documentNumber.MaxLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no máximo {documentNumber.MaxLength} dígitos.");
                 }
                 if (documentNumber.IsLessThanMinLength)
                 {
-                    errors.Add($"O número do CPF deve conter no mínimo {documentNumber.MinLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no mínimo {documentNumber.MinLength} dígitos.");
                 }
                 if (documentNumber.IsDigitOnly && !documentNumber.IsGreaterThanMaxLength && !documentNumber.IsLessThanMinLength)
                 {
                     if (!documentNumber.IsValid)
                     {
-                        errors.Add("O número do CPF informado é inválido.");
+                        errors.Add("O número do documento informado é inválido.");
                     }
                 }
             }
+
             #endregion
 
             #region Email
+
             var email = EmailValueObject.Create(request.Email!);
             if (email.IsNullOrWhiteSpace)
             {
@@ -96,10 +103,12 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
             #endregion
 
             #region CompanyId
+
             if (!request.IsAdmin && request.CompanyId == null)
             {
                 errors.Add("O Id da empresa deve ser informado para usuários não administradores.");
             }
+
             #endregion
 
             return Task.FromResult(new RequestValidationModel(errors));

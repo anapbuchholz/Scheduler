@@ -48,9 +48,19 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase
                     return Response.CreateForbiddenResponse();
                 }
 
+                var isTryingToChangeUserDocumentNumber = currentUser.DocumentNumber != request.DocumentNumber;
+                if (isTryingToChangeUserDocumentNumber)
+                {
+                    var existsUserWithSameDocumentNumber = (await _userRepository.GetUserByDocumentNumberAsync(currentUser.DocumentNumber)) != null;
+                    if (existsUserWithSameDocumentNumber)
+                    {
+                        return Response.CreateConflictResponse("Já existe um usuário cadastrado com esse número de documento.");
+                    }
+
+                    currentUser.DocumentNumber = request.DocumentNumber!;
+                }
+
                 currentUser.Name = request.Name ?? currentUser.Name;
-                currentUser.DocumentNumber = request.DocumentNumber ?? currentUser.DocumentNumber;
-                currentUser.Email = request.Email ?? currentUser.Email;
                 currentUser.IsAdmin = request.IsAdmin ?? currentUser.IsAdmin;
                 if (request.Password != null)
                 {
