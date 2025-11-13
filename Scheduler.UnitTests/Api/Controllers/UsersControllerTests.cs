@@ -166,5 +166,36 @@ namespace Scheduler.UnitTests.Api.Controllers
         }
 
         #endregion
+
+        #region UpdateUserAsync
+
+        [TestMethod]
+        public async Task UpdateUserAsync_WhenCalled_ShouldReturnOk()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var requestMock = _fixture.Create<UpdateUserRequest>();
+            var responseMock = Response.CreateOkResponse();
+            _updateUsersUseCaseMock
+                .Setup(x => x.ExecuteAsync(It.IsAny<UpdateUserRequest>()))
+                .ReturnsAsync(responseMock);
+
+            // Act
+            var result = await _controller.UpdateUserAsync(userId, requestMock);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var resultValue = result as OkObjectResult;
+            Assert.IsNotNull(resultValue);
+            AssertHttpResponse(resultValue, HttpStatusCode.OK);
+            _updateUsersUseCaseMock.Verify(x => x.ExecuteAsync(It.Is<UpdateUserRequest>(
+                r => r.Id == userId
+                  && r.Name == requestMock.Name
+                  && r.DocumentNumber == requestMock.DocumentNumber
+                  && r.Password == requestMock.Password
+                  && r.IsAdmin == requestMock.IsAdmin)), Times.Once);
+        }
+
+        #endregion
     }
 }
