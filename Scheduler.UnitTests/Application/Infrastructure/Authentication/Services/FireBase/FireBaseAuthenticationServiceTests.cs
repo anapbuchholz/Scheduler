@@ -126,7 +126,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var result = await service.DeleteFireBaseUserAsync("some@mail");
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.DeletedWithSuccess);
             proxyMock.Verify(p => p.GetUserByEmailAsync(It.IsAny<string>()), Times.Once);
             proxyMock.Verify(p => p.DeleteUserAsync(It.IsAny<string>()), Times.Once);
         }
@@ -142,7 +142,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var result = await service.DeleteFireBaseUserAsync("missing@mail");
 
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.DeletedWithSuccess);
             proxyMock.Verify(p => p.GetUserByEmailAsync(It.IsAny<string>()), Times.Once);
         }
 

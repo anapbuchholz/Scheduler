@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Scheduler.Application.Features.UseCases.User.DeleteUser;
 using Scheduler.Application.Features.UseCases.User.GetUser;
 using Scheduler.Application.Features.UseCases.User.ListUsers;
 using Scheduler.Application.Features.UseCases.User.Login;
@@ -18,6 +19,7 @@ namespace Scheduler.Application.Features.UseCases.User
             services.AddGetUser();
             services.AddListUsers();
             services.AddUpdateUser();
+            services.AddDeleteUser();
             return services;
         }
     }

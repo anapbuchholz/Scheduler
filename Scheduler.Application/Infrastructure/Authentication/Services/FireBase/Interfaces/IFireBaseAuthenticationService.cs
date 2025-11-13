@@ -13,6 +13,6 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
 
         Task<UserRecord> GetFireBaseUserByEmailAsync(string userEmail);
 
-        Task<bool> DeleteFireBaseUserAsync(string userEmail);
+        Task<(string? ExternalId, bool DeletedWithSuccess)> DeleteFireBaseUserAsync(string userEmail);
     }
 }

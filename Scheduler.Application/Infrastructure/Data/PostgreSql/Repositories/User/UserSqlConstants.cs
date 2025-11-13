@@ -34,6 +34,11 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
                                                     WHERE
                                                         id = @Id;";
 
+        public static string DELETE_USER_BY_ID = @"DELETE FROM 
+                                                        scheduler.users 
+                                                    WHERE 
+                                                        id = @Id";
+
         public static string SELECT_USER_BY_EMAIL = @"SELECT 
                                                         id AS Id, 
                                                         name AS Name,

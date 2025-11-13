@@ -74,17 +74,17 @@ namespace Scheduler.Application.Infrastructure.Authentication.Services.FireBase.
             }
         }
 
-        public async Task<bool> DeleteFireBaseUserAsync(string userEmail)
+        public async Task<(string? ExternalId, bool DeletedWithSuccess)> DeleteFireBaseUserAsync(string userEmail)
         {
             try
             {
                 var userRecord = await _firebaseAdminProxy.GetUserByEmailAsync(userEmail);
                 await _firebaseAdminProxy.DeleteUserAsync(userRecord.Uid);
-                return true;
+                return (userRecord.Uid, true);
             }
             catch
             {
-                return false;
+                return (null, false);
             }
         }
 

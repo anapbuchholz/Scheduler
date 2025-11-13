@@ -312,5 +312,25 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
                     )
                 ), Times.Once);
         }
+
+        [TestMethod]
+        public async Task DeleteUserAsync_CallsExecuteAsync_WithDeleteCommandAndUserId()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            _sqlHelperMock
+                .Setup(x => x.ExecuteAsync(UserSqlConstants.DELETE_USER_BY_ID, It.IsAny<object>()))
+                .ReturnsAsync(1);
+            // Act
+            await _userRepository.DeleteUserAsync(userId);
+            // Assert
+            _sqlHelperMock.Verify(x =>
+                x.ExecuteAsync(
+                    UserSqlConstants.DELETE_USER_BY_ID,
+                    It.Is<object>(param =>
+                        param.GetType().GetProperty("Id").GetValue(param).Equals(userId) == true
+                    )
+                ), Times.Once);
+        }
     }
 }

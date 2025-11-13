@@ -48,6 +48,12 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
             });
         }
 
+        public async Task DeleteUserAsync(Guid id)
+        {
+            var command = UserSqlConstants.DELETE_USER_BY_ID;
+            await _sqlHelper.ExecuteAsync(command, new { Id = id });
+        }
+
         public Task<PaginatedQueryResult<UserEntity>> ListUsersAsync(string? name, string? email, string? documentNumber, bool? isAdmin, PaginationInput paginationParameters)
         {
             var whereClause = UserSqlConstants.ListUsersPaginationConstants.LIST_USERS_WHERE_STATEMENT;

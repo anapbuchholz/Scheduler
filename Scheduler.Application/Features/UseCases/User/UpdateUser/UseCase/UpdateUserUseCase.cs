@@ -68,7 +68,7 @@ namespace Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase
                     currentUser.PasswordHash = encryptedPassword;
                 }
 
-                var (externalId, registeredWithSuccess) = await _authenticationService
+                var (_, registeredWithSuccess) = await _authenticationService
                     .UpdateFireBaseUserAsync(currentUser.ExternalId, currentUser.Email, request.Password!, currentUser.Name, currentUser.IsAdmin);
                 if (!registeredWithSuccess)
                 {
