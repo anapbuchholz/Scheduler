@@ -24,7 +24,7 @@ namespace Scheduler.Application.Features.UseCases.User.GetUser.UseCase
                     return Response.CreateNotFoundResponse();
                 }
 
-                if (!_userSession.IsAdmin && user.ExternalId != _userSession.UserId)
+                if (!_userSession.IsAdmin && user.ExternalId != _userSession.UserExternalId)
                 {
                     return Response.CreateForbiddenResponse();
                 }

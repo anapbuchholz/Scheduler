@@ -64,15 +64,15 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
                     }
                 }
 
-                var userPermission = request.IsAdmin ? "1" : "0";
-                var (ExternalId, RegisteredWithSuccess) = await _authenticationService.RegisterFireBaseUserAsync(request.Email!, request.Password!, $"{request.Name}-{userPermission}");
+                var (ExternalId, RegisteredWithSuccess) = await _authenticationService
+                    .RegisterFireBaseUserAsync(request.Email!, request.Password!, request.Name, request.IsAdmin);
                 if (!RegisteredWithSuccess)
                 {
                     return Response.CreateInternalErrorResponse("Não foi possível cadastrar o usuário.");
                 }
 
-                var AesKey = EnvironmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
-                var passwordHash = AES.Encrypt(request.Password!, AesKey);
+                var aesKey = EnvironmentVariableHandler.GetEnvironmentVariable(CypherAesKeyEnvironmentVariableName);
+                var passwordHash = AES.Encrypt(request.Password!, aesKey);
                 var userEntity = new UserEntity
                 {
                     Id = Guid.NewGuid(),

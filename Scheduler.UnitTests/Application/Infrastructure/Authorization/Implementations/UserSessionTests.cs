@@ -10,7 +10,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authorization.Implement
         {
             var session = new UserSession();
 
-            Assert.AreEqual(string.Empty, session.UserId);
+            Assert.AreEqual(string.Empty, session.UserExternalId);
             Assert.AreEqual(string.Empty, session.UserName);
             Assert.AreEqual(string.Empty, session.UserEmail);
             Assert.IsFalse(session.IsAdmin);
@@ -23,7 +23,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authorization.Implement
 
             session.SetUserSession("id-1", "User One", "one@example.com", true);
 
-            Assert.AreEqual("id-1", session.UserId);
+            Assert.AreEqual("id-1", session.UserExternalId);
             Assert.AreEqual("User One", session.UserName);
             Assert.AreEqual("one@example.com", session.UserEmail);
             Assert.IsTrue(session.IsAdmin);
@@ -37,7 +37,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authorization.Implement
             session.SetUserSession("id-1", "User One", "one@example.com", true);
             session.SetUserSession("id-2", "User Two", "two@example.com", false);
 
-            Assert.AreEqual("id-2", session.UserId);
+            Assert.AreEqual("id-2", session.UserExternalId);
             Assert.AreEqual("User Two", session.UserName);
             Assert.AreEqual("two@example.com", session.UserEmail);
             Assert.IsFalse(session.IsAdmin);
@@ -50,7 +50,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authorization.Implement
 
             session.SetUserSession(string.Empty, string.Empty, string.Empty, false);
 
-            Assert.AreEqual(string.Empty, session.UserId);
+            Assert.AreEqual(string.Empty, session.UserExternalId);
             Assert.AreEqual(string.Empty, session.UserName);
             Assert.AreEqual(string.Empty, session.UserEmail);
             Assert.IsFalse(session.IsAdmin);
@@ -63,7 +63,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authorization.Implement
 
             session.SetUserSession("  id  ", "  name  ", "  email@x  ", true);
 
-            Assert.AreEqual("  id  ", session.UserId);
+            Assert.AreEqual("  id  ", session.UserExternalId);
             Assert.AreEqual("  name  ", session.UserName);
             Assert.AreEqual("  email@x  ", session.UserEmail);
             Assert.IsTrue(session.IsAdmin);

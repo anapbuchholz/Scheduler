@@ -171,7 +171,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
             var result = await _userRepository.GetUserByIdAsync(id);
 
             // Assert
-            Assert.IsNotNull(result);;
+            Assert.IsNotNull(result); ;
             Assert.AreEqual(expected.Id, result.Id);
 
             _sqlHelperMock.Verify(x =>
@@ -225,7 +225,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
                 .ReturnsAsync(expectedResult);
 
             //Act
-            var result =  await _userRepository.ListUsersAsync(name, email, documentNumber, isAdmin, _paginationInput);
+            var result = await _userRepository.ListUsersAsync(name, email, documentNumber, isAdmin, _paginationInput);
 
             //Assert
             Assert.AreEqual(expectedResult, result);
@@ -275,6 +275,61 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Data.PostgreSql.Reposit
                 x.ExecuteAsync(
                     UserSqlConstants.INSERT_USER,
                     It.Is<UserEntity>(u => u.Email == user.Email && u.Id == user.Id)
+                ), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task UpdateUserAsync_CallsExecuteAsync_WithUpdateCommandAndUser()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var user = new UserEntity
+            {
+                Id = userId,
+                Email = "test@test.com",
+                Name = "Test User",
+                DocumentNumber = "123456789",
+                PasswordHash = "hashedpassword"
+            };
+
+            _sqlHelperMock
+                .Setup(x => x.ExecuteAsync(UserSqlConstants.UPDATE_USER_BY_ID, It.IsAny<object>()))
+                .ReturnsAsync(1);
+
+            //Act
+            await _userRepository.UpdateUserAsync(userId, user);
+
+            //Assert
+            _sqlHelperMock.Verify(x =>
+                x.ExecuteAsync(
+                    UserSqlConstants.UPDATE_USER_BY_ID,
+                    It.Is<object>(param =>
+                        param.GetType().GetProperty("Name").GetValue(param).Equals(user.Name) == true &&
+                        param.GetType().GetProperty("DocumentNumber").GetValue(param).Equals(user.DocumentNumber) == true &&
+                        param.GetType().GetProperty("PasswordHash").GetValue(param).Equals(user.PasswordHash) == true &&
+                        param.GetType().GetProperty("IsAdmin").GetValue(param).Equals(user.IsAdmin) == true &&
+                        param.GetType().GetProperty("Id").GetValue(param).Equals(userId) == true
+                    )
+                ), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task DeleteUserAsync_CallsExecuteAsync_WithDeleteCommandAndUserId()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            _sqlHelperMock
+                .Setup(x => x.ExecuteAsync(UserSqlConstants.DELETE_USER_BY_ID, It.IsAny<object>()))
+                .ReturnsAsync(1);
+            // Act
+            await _userRepository.DeleteUserAsync(userId);
+            // Assert
+            _sqlHelperMock.Verify(x =>
+                x.ExecuteAsync(
+                    UserSqlConstants.DELETE_USER_BY_ID,
+                    It.Is<object>(param =>
+                        param.GetType().GetProperty("Id").GetValue(param).Equals(userId) == true
+                    )
                 ), Times.Once);
         }
     }

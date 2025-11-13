@@ -32,7 +32,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
             var proxyMock = new Mock<IFireBaseAdminProxy>();
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
 
-            var (isAuthenticated, jwt) = await service.LoginInFireBase("u@x.com", "pwd");
+            var (isAuthenticated, jwt) = await service.LoginInFireBaseAsync("u@x.com", "pwd");
 
             Assert.IsTrue(isAuthenticated);
             Assert.AreEqual(expectedToken, jwt);
@@ -50,7 +50,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
             var proxyMock = new Mock<IFireBaseAdminProxy>();
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
 
-            var (isAuthenticated, jwt) = await service.LoginInFireBase("u@x.com", "wrong");
+            var (isAuthenticated, jwt) = await service.LoginInFireBaseAsync("u@x.com", "wrong");
 
             Assert.IsFalse(isAuthenticated);
             Assert.IsNull(jwt);
@@ -66,7 +66,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
 
-            var (externalId, registered) = await service.RegisterFireBaseUserAsync("a@b.com", "pwd", "display");
+            var (externalId, registered) = await service.RegisterFireBaseUserAsync("a@b.com", "pwd", "name", true);
 
             Assert.IsTrue(registered);
             Assert.AreEqual("uid-123", externalId);
@@ -82,7 +82,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
 
-            var (externalId, registered) = await service.RegisterFireBaseUserAsync("a@b.com", "pwd", "display");
+            var (externalId, registered) = await service.RegisterFireBaseUserAsync("a@b.com", "pwd", "name", true);
 
             Assert.IsFalse(registered);
             Assert.IsNull(externalId);
@@ -97,10 +97,20 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
             proxyMock.Setup(p => p.UpdateUserAsync(It.IsAny<UserRecordArgs>())).ReturnsAsync(CreateUserRecord("any"));
 
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
+            var uid = "1234";
+            var email = "x@y";
+            var password = "newpwd";
+            var name = "New Name";
+            var isAdmin = false;
+            var userPermission = isAdmin ? "1" : "0";
+            var displayName = $"{name}-{userPermission}";
+            await service.UpdateFireBaseUserAsync(uid, email, password, name, isAdmin);
 
-            await service.UpdateFireBaseUser(new UserRecordArgs { Email = "x@y" });
-
-            proxyMock.Verify(p => p.UpdateUserAsync(It.IsAny<UserRecordArgs>()), Times.Once);
+            proxyMock.Verify(p => p.UpdateUserAsync(It.Is<UserRecordArgs>(ur => 
+                ur.Uid == uid &&
+                ur.Email == email &&
+                ur.Password == password &&
+                ur.DisplayName == displayName)), Times.Once);
         }
 
         [TestMethod]
@@ -116,7 +126,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var result = await service.DeleteFireBaseUserAsync("some@mail");
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.DeletedWithSuccess);
             proxyMock.Verify(p => p.GetUserByEmailAsync(It.IsAny<string>()), Times.Once);
             proxyMock.Verify(p => p.DeleteUserAsync(It.IsAny<string>()), Times.Once);
         }
@@ -132,7 +142,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var result = await service.DeleteFireBaseUserAsync("missing@mail");
 
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.DeletedWithSuccess);
             proxyMock.Verify(p => p.GetUserByEmailAsync(It.IsAny<string>()), Times.Once);
         }
 
@@ -146,7 +156,7 @@ namespace Scheduler.UnitTests.Application.Infrastructure.Authentication.Services
 
             var service = new FireBaseAuthenticationService(httpClient, proxyMock.Object);
 
-            var user = await service.GetFireBaseUserByEmail("u@x");
+            var user = await service.GetFireBaseUserByEmailAsync("u@x");
 
             Assert.IsNotNull(user);
             Assert.AreEqual("uid-xyz", user.Uid);

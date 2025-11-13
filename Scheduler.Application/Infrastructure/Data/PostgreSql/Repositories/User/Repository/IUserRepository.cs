@@ -12,6 +12,8 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
     {
         Task RegisterUserAsync(UserEntity user);
 
+        Task UpdateUserAsync(Guid Id, UserEntity user);
+
         Task<UserEntity?> GetUserByIdAsync(Guid Id);
 
         Task<UserEntity?> GetUserByEmailAsync(string email);
@@ -19,5 +21,7 @@ namespace Scheduler.Application.Infrastructure.Data.PostgreSql.Repositories.User
         Task<UserEntity?> GetUserByDocumentNumberAsync(string documentNumber);
 
         Task<PaginatedQueryResult<UserEntity>> ListUsersAsync(string? name, string? email, string? documentNumber, bool? isAdmin, PaginationInput paginationParameters);
+
+        Task DeleteUserAsync(Guid id);
     }
 }

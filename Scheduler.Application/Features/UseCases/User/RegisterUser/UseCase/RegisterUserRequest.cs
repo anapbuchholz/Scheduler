@@ -1,8 +1,10 @@
 ﻿using Scheduler.Application.Features.Shared.IO;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase
 {
+    [ExcludeFromCodeCoverage]
     public sealed class RegisterUserRequest : IRequest
     {
         public string? Name { get; set; }

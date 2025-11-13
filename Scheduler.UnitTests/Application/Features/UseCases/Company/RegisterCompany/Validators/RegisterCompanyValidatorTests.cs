@@ -48,7 +48,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O nome fantasia deve ser informado.");
+            CollectionAssert.Contains(result.Errors, "O nome fantasia deve ser informado");
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O nome fantasia deve conter no máximo 255 caracteres.");
+            CollectionAssert.Contains(result.Errors, "O nome fantasia deve conter no máximo 255 caracteres");
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "A razão social deve conter no máximo 255 caracteres.");
+            CollectionAssert.Contains(result.Errors, "A razão social deve conter no máximo 255 caracteres");
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail informado é inválido.");
+            CollectionAssert.Contains(result.Errors, "O E-mail informado é inválido");
         }
 
         [TestMethod]
@@ -139,7 +139,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve conter no máximo 255 caracteres.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve conter no máximo 255 caracteres");
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve conter no mínimo 5 caracteres.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve conter no mínimo 5 caracteres");
         }
 
         [TestMethod]
@@ -175,7 +175,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O telefone deve conter no máximo 20 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O telefone deve conter no máximo 20 dígitos");
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O telefone deve conter no mínimo 11 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O telefone deve conter no mínimo 11 dígitos");
         }
 
         [TestMethod]
@@ -211,7 +211,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O telefone deve conter apenas números.");
+            CollectionAssert.Contains(result.Errors, "O telefone deve conter apenas números");
         }
 
         [TestMethod]
@@ -229,7 +229,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve ser informado.");
+            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve ser informado");
         }
 
         [TestMethod]
@@ -247,7 +247,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter apenas números.");
+            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter apenas números");
         }
 
         [TestMethod]
@@ -265,7 +265,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter no máximo 14 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter no máximo 14 dígitos");
         }
 
         [TestMethod]
@@ -283,7 +283,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter no mínimo 11 dígitos.");
+            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF deve conter no mínimo 11 dígitos");
         }
 
         [TestMethod]
@@ -301,7 +301,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.Company.RegisterComp
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF informado é inválido.");
+            CollectionAssert.Contains(result.Errors, "O CNPJ/CPF informado é inválido");
         }
     }
 }

@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Scheduler.API.Controllers.Base;
 using Scheduler.Application.Features.Shared;
 using Scheduler.Application.Features.Shared.IO;
+using Scheduler.Application.Features.UseCases.User.DeleteUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.GetUser.UseCase;
 using Scheduler.Application.Features.UseCases.User.ListUsers.UseCase;
 using Scheduler.Application.Features.UseCases.User.Login.UseCase;
 using Scheduler.Application.Features.UseCases.User.RegisterUser.UseCase;
+using Scheduler.Application.Features.UseCases.User.UpdateUser.UseCase;
 using System;
 using System.Threading.Tasks;
 
@@ -18,12 +20,16 @@ namespace Scheduler.API.Controllers
         IUseCase<RegisterUserRequest, Response> registerUserUseCase,
         IUseCase<LoginRequest, Response> loginUseCase,
         IUseCase<GetUserRequest, Response> getUserUseCase,
-        IUseCase<ListUsersRequest, Response> listUsersUseCase) : BaseController
+        IUseCase<ListUsersRequest, Response> listUsersUseCase,
+        IUseCase<UpdateUserRequest, Response> updateUserUseCase,
+        IUseCase<DeleteUserRequest, Response> deleteUserUseCase) : BaseController
     {   
         private readonly IUseCase<RegisterUserRequest, Response> _registerUserUseCase = registerUserUseCase;
         private readonly IUseCase<LoginRequest, Response> _loginUseCase = loginUseCase;
         private readonly IUseCase<GetUserRequest, Response> _getUserUseCase = getUserUseCase;
         private readonly IUseCase<ListUsersRequest, Response> _listUsersUseCase = listUsersUseCase;
+        private readonly IUseCase<UpdateUserRequest, Response> _updateUserUseCase = updateUserUseCase;
+        private readonly IUseCase<DeleteUserRequest, Response> _deleteUserUseCase = deleteUserUseCase;
 
         [HttpGet]
         [Authorize]
@@ -57,16 +63,19 @@ namespace Scheduler.API.Controllers
 
         [HttpPatch("{id}")]
         [Authorize]
-        public Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] object company)
+        public async Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserRequest request)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            request.SetId(id);
+            var result = await _updateUserUseCase.ExecuteAsync(request);
+            return GetHttpResponse(result);
         }
 
         [HttpDelete("{id}")]
         [Authorize]
-        public Task<IActionResult> DeleteUserAsync([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteUserAsync([FromRoute] Guid id)
         {
-            throw new NotImplementedException("This method is not implemented yet.");
+            var result = await _deleteUserUseCase.ExecuteAsync(new DeleteUserRequest{ Id = id });
+            return GetHttpResponse(result);
         }
     }
 }

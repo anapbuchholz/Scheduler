@@ -97,7 +97,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             Assert.AreEqual("Já existe um usuário cadastrado com esse email.", response.ValidationErrorMessage);
             Assert.IsNull(response.Body);
             _companyRepositoryMock.Verify(x => x.GetCompanyAsync(It.IsAny<Guid>()), Times.Never);
-            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
             _userRepositoryMock.Verify(x => x.RegisterUserAsync(It.IsAny<UserEntity>()), Times.Never);
         }
 
@@ -119,7 +119,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.AreEqual("A empresa informada não existe.", response.ValidationErrorMessage);
             Assert.IsNull(response.Body);
-            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
             _userRepositoryMock.Verify(x => x.RegisterUserAsync(It.IsAny<UserEntity>()), Times.Never);
         }
 
@@ -134,7 +134,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             var validationModel = new RequestValidationModel(new List<string>());
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(request.Email!)).ReturnsAsync((UserEntity)null);
-            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, $"{request.Name}-1"))
+            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, request.Name, request.IsAdmin))
                 .ReturnsAsync((null, false));
 
             var response = await _useCase.ExecuteAsync(request);
@@ -157,7 +157,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             var validationModel = new RequestValidationModel(new List<string>());
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(request.Email!)).ReturnsAsync((UserEntity)null);
-            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, $"{request.Name}-1"))
+            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, request.Name, request.IsAdmin))
                 .ReturnsAsync(("externalId123", true));
 
             var response = await _useCase.ExecuteAsync(request);
@@ -188,7 +188,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             _validatorMock.Setup(x => x.ValidateAsync(request)).ReturnsAsync(validationModel);
             _userRepositoryMock.Setup(x => x.GetUserByEmailAsync(request.Email!)).ReturnsAsync((UserEntity)null);
             _companyRepositoryMock.Setup(x => x.GetCompanyAsync(companyId)).ReturnsAsync(_fixture.Create<CompanyEntity>());
-            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, $"{request.Name}-0"))
+            _authServiceMock.Setup(x => x.RegisterFireBaseUserAsync(request.Email!, request.Password!, request.Name, request.IsAdmin))
                 .ReturnsAsync(("externalId456", true));
 
             var response = await _useCase.ExecuteAsync(request);
@@ -243,7 +243,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.RegisterUser.Us
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
             Assert.AreEqual("Já existe um usuário cadastrado com esse número de documento.", response.ValidationErrorMessage);
             Assert.IsNull(response.Body);
-            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _authServiceMock.Verify(x => x.RegisterFireBaseUserAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()), Times.Never);
             _userRepositoryMock.Verify(x => x.RegisterUserAsync(It.IsAny<UserEntity>()), Times.Never);
         }
     }

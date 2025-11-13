@@ -8,102 +8,107 @@ namespace Scheduler.Application.Features.UseCases.User.RegisterUser.Validators
 {
     internal sealed class RegisterUserValidator : IRequestValidator<RegisterUserRequest>
     {
-        private readonly int _nameMaxLength = 255;
-        private readonly int _passwordMinLength = 6;
-        private readonly int _passwordMaxLength = 16;
-
         public Task<RequestValidationModel> ValidateAsync(RegisterUserRequest request)
         {
             var errors = new List<string>();
 
             #region Name
-            var isNameEmpty = string.IsNullOrWhiteSpace(request.Name);
-            if (isNameEmpty)
+
+            var userNameValueObject = UserNameValueObject.Create(request.Name!);
+            if (userNameValueObject.IsNullOrWhiteSpace)
             {
-                errors.Add("O nome deve ser informado.");
+                errors.Add("O nome deve ser informado");
             }
-            if (!isNameEmpty && request.Name?.Length > _nameMaxLength)
+            if (userNameValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"O nome deve conter no máximo {_nameMaxLength} caracteres.");
+                errors.Add($"O nome deve conter no máximo {userNameValueObject.MaxLength} caracteres");
             }
+
             #endregion
 
             #region Password
-            var isPasswordEmpty = string.IsNullOrWhiteSpace(request.Password);
-            if (isPasswordEmpty)
+
+            var userPasswordValueObject = UserPasswordValueObject.Create(request.Password!);
+            if (userPasswordValueObject.IsNullOrEmpty)
             {
-                errors.Add("A senha deve ser informada.");
+                errors.Add("A senha deve ser informada");
             }
-            if (!isPasswordEmpty && request.Password!.Length < _passwordMinLength)
+            if (userPasswordValueObject.IsLessThanMinLength)
             {
-                errors.Add($"A senha deve conter no mínimo {_passwordMinLength} caracteres.");
+                errors.Add($"A senha deve conter no mínimo {userPasswordValueObject.MinLength} caracteres");
             }
-            if (!isPasswordEmpty && request.Password!.Length > _passwordMaxLength)
+            if (userPasswordValueObject.IsGreaterThanMaxLength)
             {
-                errors.Add($"A senha deve conter no máximo {_passwordMaxLength} caracteres.");
+                errors.Add($"A senha deve conter no máximo {userPasswordValueObject.MaxLength} caracteres");
             }
+
             #endregion
 
             #region DocumentNumber
+
             var documentNumber = DocumentNumberValueObject.Create(request.DocumentNumber!);
             if (documentNumber.IsNullOrWhiteSpace)
             {
-                errors.Add("O número do CPF deve ser informado.");
+                errors.Add("O número do documento deve ser informado");
             }
             
             if (!documentNumber.IsNullOrWhiteSpace)
             {
                 if (!documentNumber.IsDigitOnly)
                 {
-                    errors.Add("O número do CPF deve conter apenas números.");
+                    errors.Add("O número do documento deve conter apenas dígitos numéricos");
                 }
                 if (documentNumber.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O número do CPF deve conter no máximo {documentNumber.MaxLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no máximo {documentNumber.MaxLength} dígitos");
                 }
                 if (documentNumber.IsLessThanMinLength)
                 {
-                    errors.Add($"O número do CPF deve conter no mínimo {documentNumber.MinLength} dígitos.");
+                    errors.Add($"O número do documento deve conter no mínimo {documentNumber.MinLength} dígitos");
                 }
                 if (documentNumber.IsDigitOnly && !documentNumber.IsGreaterThanMaxLength && !documentNumber.IsLessThanMinLength)
                 {
                     if (!documentNumber.IsValid)
                     {
-                        errors.Add("O número do CPF informado é inválido.");
+                        errors.Add("O número do documento informado é inválido");
                     }
                 }
             }
+
             #endregion
 
             #region Email
+
             var email = EmailValueObject.Create(request.Email!);
             if (email.IsNullOrWhiteSpace)
             {
-                errors.Add("O E-mail deve ser informado.");
+                errors.Add("O E-mail deve ser informado");
             }
             if (!email.IsNullOrWhiteSpace)
             {
                 if (email.IsGreaterThanMaxLength)
                 {
-                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no máximo {email.MaxLength} caracteres");
                 }
                 if (email.IsLessThanMinLength)
                 {
-                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres.");
+                    errors.Add($"O E-mail deve conter no mínimo {email.MinLength} caracteres");
                 }
                 if (!email.IsValidEmail)
                 {
-                    errors.Add("O E-mail informado é inválido.");
+                    errors.Add("O E-mail informado é inválido");
                 }
             }
 
             #endregion
 
             #region CompanyId
+
             if (!request.IsAdmin && request.CompanyId == null)
             {
-                errors.Add("O Id da empresa deve ser informado para usuários não administradores.");
+                errors.Add("O Id da empresa deve ser informado para usuários não administradores");
             }
+
             #endregion
 
             return Task.FromResult(new RequestValidationModel(errors));

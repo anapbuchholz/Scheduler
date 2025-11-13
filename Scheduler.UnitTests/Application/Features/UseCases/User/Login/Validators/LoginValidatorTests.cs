@@ -27,7 +27,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsTrue(result.IsValid);
-            Assert.AreEqual(0, result.Errors.Count);
+            Assert.IsEmpty(result.Errors);
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado");
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado");
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "A senha deve ser informada.");
+            CollectionAssert.Contains(result.Errors, "A senha deve ser informada");
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "A senha deve ser informada.");
+            CollectionAssert.Contains(result.Errors, "A senha deve ser informada");
         }
 
         [TestMethod]
@@ -102,8 +102,8 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado.");
-            CollectionAssert.Contains(result.Errors, "A senha deve ser informada.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado");
+            CollectionAssert.Contains(result.Errors, "A senha deve ser informada");
         }
 
         [TestMethod]
@@ -118,8 +118,8 @@ namespace Scheduler.UnitTests.Application.Features.UseCases.User.Login.Validator
             var result = await _validator.ValidateAsync(request);
 
             Assert.IsFalse(result.IsValid);
-            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado.");
-            CollectionAssert.Contains(result.Errors, "A senha deve ser informada.");
+            CollectionAssert.Contains(result.Errors, "O E-mail deve ser informado");
+            CollectionAssert.Contains(result.Errors, "A senha deve ser informada");
         }
     }
 }
